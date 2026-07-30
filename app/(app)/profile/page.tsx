@@ -1,0 +1,37 @@
+import { UserCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import {
+  getAllergies,
+  getCircleContext,
+  getCircleProfile,
+} from "@/lib/supabase/queries";
+import { PatientProfileCard } from "@/components/profile/PatientProfileCard";
+import { PreferencesCard } from "@/components/profile/PreferencesCard";
+import { AllergiesSection } from "@/components/care-list/AllergiesSection";
+
+export default async function ProfilePage() {
+  const supabase = await createClient();
+  const ctx = await getCircleContext(supabase);
+  const [profile, allergies] = await Promise.all([
+    getCircleProfile(supabase, ctx.circleId),
+    getAllergies(supabase, ctx.circleId),
+  ]);
+
+  const canEdit = ctx.role !== "viewer";
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div>
+        <h1 className="flex items-center gap-2 text-3xl font-bold">
+          <UserCircle className="h-8 w-8 text-primary" aria-hidden="true" />
+          Profile
+        </h1>
+        <p className="mt-1 text-lg text-muted">{ctx.circleName}</p>
+      </div>
+
+      <PatientProfileCard profile={profile} canEdit={canEdit} />
+      <AllergiesSection allergies={allergies} canEdit={canEdit} />
+      <PreferencesCard profile={profile} canEdit={canEdit} />
+    </div>
+  );
+}

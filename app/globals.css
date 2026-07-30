@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/* Deliberately fixed, high-contrast bright/modern theme -- not tied to OS
+   dark mode, so contrast stays predictable for older-adult users. */
+:root {
+  --background: #f8fafc;
+  --surface: #eef2ff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #cbd5e1;
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --danger: #dc2626;
+  --danger-dark: #991b1b;
+  --success: #059669;
+  --warning-bg: #fef3c7;
+  --warning-border: #d97706;
+  --warning-text: #78350f;
+  --focus-ring: #f59e0b;
+
+  /* Vivid accents used per-section (e.g. glance cards, icon badges) so each
+     part of the care list reads as visually distinct at a glance. */
+  --accent-blue: #0ea5e9;
+  --accent-teal: #0d9488;
+  --accent-gold: #ca8a04;
+  --accent-purple: #7c3aed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-danger: var(--danger);
+  --color-danger-dark: var(--danger-dark);
+  --color-success: var(--success);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --color-warning-text: var(--warning-text);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-purple: var(--accent-purple);
+  --font-sans: var(--font-geist-sans);
+}
+
+/* ~19px base so every rem-based Tailwind text size scales up together. */
+html {
+  font-size: 118.75%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+
+* {
+  border-color: var(--border);
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,47 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { toggleChecklist } from "@/lib/actions/care-list";
+import { CheckToggle } from "@/components/ui/CheckToggle";
+import type { DoseChecklistEntry, Medication } from "@/lib/types";
+
+export function ChecklistSection({
+  medications,
+  checklist,
+}: {
+  medications: Medication[];
+  checklist: DoseChecklistEntry[];
+}) {
+  const [, startTransition] = useTransition();
+  const [optimistic, setOptimistic] = useState<Record<string, boolean>>({});
+
+  const takenMap = new Map(checklist.map((c) => [c.medication_id, c.taken]));
+
+  function handleToggle(medicationId: string, currentlyTaken: boolean) {
+    setOptimistic((prev) => ({ ...prev, [medicationId]: !currentlyTaken }));
+    startTransition(async () => {
+      await toggleChecklist(medicationId, !currentlyTaken);
+    });
+  }
+
+  if (medications.length === 0) {
+    return <p className="text-lg text-muted">No medications added yet.</p>;
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {medications.map((med) => {
+        const taken = optimistic[med.id] ?? takenMap.get(med.id) ?? false;
+        return (
+          <CheckToggle
+            key={med.id}
+            checked={taken}
+            onChange={() => handleToggle(med.id, taken)}
+          >
+            {med.name}
+          </CheckToggle>
+        );
+      })}
+    </div>
+  );
+}
