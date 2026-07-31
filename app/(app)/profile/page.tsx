@@ -23,11 +23,11 @@ export default async function ProfilePage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="flex items-center gap-2 text-3xl font-bold">
-          <UserCircle className="h-8 w-8 text-primary" aria-hidden="true" />
+        <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+          <UserCircle className="h-6 w-6 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
           Profile
         </h1>
-        <p className="mt-1 text-lg text-muted">{ctx.circleName}</p>
+        <p className="mt-1 text-base text-muted sm:text-lg">{ctx.circleName}</p>
       </div>
 
       <PatientProfileCard profile={profile} canEdit={canEdit} />

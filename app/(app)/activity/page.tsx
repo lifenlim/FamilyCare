@@ -11,20 +11,20 @@ export default async function ActivityPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="flex items-center gap-2 text-3xl font-bold">
-          <History className="h-8 w-8 text-primary" aria-hidden="true" />
+        <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+          <History className="h-6 w-6 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
           Activity
         </h1>
-        <p className="mt-1 text-lg text-muted">{ctx.circleName}</p>
+        <p className="mt-1 text-base text-muted sm:text-lg">{ctx.circleName}</p>
       </div>
 
       <Card>
-        <h2 className="text-2xl font-bold">Activity log</h2>
-        <p className="mt-1 text-lg text-muted">
+        <h2 className="text-xl font-bold sm:text-2xl">Activity log</h2>
+        <p className="mt-1 text-base text-muted sm:text-lg">
           Who viewed or edited the care list recently.
         </p>
         {ctx.role === "viewer" ? (
-          <p className="mt-4 text-lg text-muted">
+          <p className="mt-4 text-base text-muted sm:text-lg">
             Family members don&apos;t have access to the activity log.
           </p>
         ) : (

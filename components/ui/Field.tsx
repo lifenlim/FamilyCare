@@ -6,7 +6,7 @@ import {
 } from "react";
 
 const inputClasses =
-  "w-full rounded-lg border-2 border-border px-4 py-3 text-lg text-foreground bg-white focus-visible:border-primary";
+  "w-full rounded-lg border-2 border-border px-3 py-2.5 text-base text-foreground bg-white focus-visible:border-primary sm:px-4 sm:py-3 sm:text-lg";
 
 export function Field({
   label,
@@ -19,7 +19,7 @@ export function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={htmlFor} className="text-lg font-medium">
+      <label htmlFor={htmlFor} className="text-base font-medium sm:text-lg">
         {label}
       </label>
       {children}

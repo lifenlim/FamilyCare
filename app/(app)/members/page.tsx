@@ -22,20 +22,20 @@ export default async function MembersPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="flex items-center gap-2 text-3xl font-bold">
-          <Users className="h-8 w-8 text-primary" aria-hidden="true" />
+        <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+          <Users className="h-6 w-6 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
           Members
         </h1>
-        <p className="mt-1 text-lg text-muted">{ctx.circleName}</p>
+        <p className="mt-1 text-base text-muted sm:text-lg">{ctx.circleName}</p>
       </div>
 
       {ctx.role === "owner" && (
         <Card>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <UserPlus className="h-6 w-6 text-primary" aria-hidden="true" />
+          <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+            <UserPlus className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
             Invite someone
           </h2>
-          <p className="mt-1 text-lg text-muted">
+          <p className="mt-1 text-base text-muted sm:text-lg">
             Generate a link and share it with them. They&apos;ll sign in with
             their own email — no separate account setup needed.
           </p>
@@ -46,8 +46,8 @@ export default async function MembersPage() {
       )}
 
       <Card>
-        <h2 className="flex items-center gap-2 text-2xl font-bold">
-          <Users className="h-6 w-6 text-primary" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+          <Users className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
           People in this circle
         </h2>
         <MemberList

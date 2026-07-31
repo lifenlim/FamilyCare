@@ -49,8 +49,8 @@ export default async function ForYouPage() {
     <div className="flex flex-col gap-8">
       <ViewLogger circleId={ctx.circleId} />
       <div>
-        <h1 className="text-3xl font-bold">Today, at a glance</h1>
-        <p className="mt-1 text-lg text-muted">{formatToday()}</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">Today, at a glance</h1>
+        <p className="mt-1 text-base text-muted sm:text-lg">{formatToday()}</p>
       </div>
       <LowStockBanner medications={medications} />
 
