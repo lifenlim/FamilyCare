@@ -6,6 +6,7 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-latest
+    container: postgres:17
     steps:
       - name: Export database
         run: pg_dump "${{ secrets.SUPABASE_DB_URL }}" > backup-$(date +%F).sql
