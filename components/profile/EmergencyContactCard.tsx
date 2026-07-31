@@ -39,8 +39,8 @@ export function EmergencyContactCard({
   return (
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-2xl font-bold">
-          <Phone className="h-6 w-6 text-danger" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+          <Phone className="h-5 w-5 text-danger sm:h-6 sm:w-6" aria-hidden="true" />
           Emergency contact
         </h2>
         {canEdit && !editing && (

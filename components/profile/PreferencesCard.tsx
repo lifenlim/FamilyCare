@@ -39,8 +39,8 @@ export function PreferencesCard({
   return (
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-2xl font-bold">
-          <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+          <Sparkles className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
           Personal preferences
         </h2>
         {canEdit && !editing && (

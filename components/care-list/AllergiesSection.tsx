@@ -46,8 +46,8 @@ export function AllergiesSection({
   return (
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-2xl font-bold">
-          <AlertTriangle className="h-6 w-6 text-primary" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+          <AlertTriangle className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
           Allergies
         </h2>
         {canEdit && !addingNew && (
@@ -89,7 +89,7 @@ export function AllergiesSection({
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xl font-semibold">{a.name}</p>
+                  <p className="text-lg font-semibold sm:text-xl">{a.name}</p>
                   {a.severity && (
                     <Badge tone={SEVERITY_TONE[a.severity]}>
                       {SEVERITY_LABEL[a.severity]}

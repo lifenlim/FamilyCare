@@ -51,7 +51,7 @@ export function PatientProfileCard({
     <Card>
       {!editing && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-2xl font-bold">Recipient profile</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Recipient profile</h2>
           {canEdit && (
             <Button
               variant="secondary"
@@ -138,7 +138,7 @@ export function PatientProfileCard({
               <User className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-xl font-bold">
+              <p className="text-lg font-bold sm:text-xl">
                 {profile.patient_name || "Not set"}
               </p>
               {dobAge && <p className="text-base text-muted">{dobAge}</p>}
