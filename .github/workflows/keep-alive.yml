@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Supabase
-        run: curl -s "${{ https://rcpjkcwvkjlpevkvomij.supabase.co/rest/v1/ }}/rest/v1/" -H "apikey: ${{ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjcGprY3d2a2pscGV2a3ZvbWlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzQ4NDIsImV4cCI6MjEwMDcxMDg0Mn0.uRQrr1CAdtHfdTP2mRgLH1A3HwURdOdFlzG_AdcyBEE }}"
+        run: curl -s "${{ secrets.https://rcpjkcwvkjlpevkvomij.supabase.co/rest/v1/ }}/rest/v1/" -H "apikey: ${{ secrets.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjcGprY3d2a2pscGV2a3ZvbWlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzQ4NDIsImV4cCI6MjEwMDcxMDg0Mn0.uRQrr1CAdtHfdTP2mRgLH1A3HwURdOdFlzG_AdcyBEE }}"
