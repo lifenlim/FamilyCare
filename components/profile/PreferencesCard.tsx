@@ -100,7 +100,7 @@ export function PreferencesCard({
           </div>
         </form>
       ) : (
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="mt-4 flex flex-col gap-3">
           <InfoTile
             icon={Utensils}
             label="Food preference"

@@ -51,7 +51,7 @@ export function PatientProfileCard({
     <Card>
       {!editing && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-2xl font-bold">Patient profile</h2>
+          <h2 className="text-2xl font-bold">Recipient profile</h2>
           {canEdit && (
             <Button
               variant="secondary"

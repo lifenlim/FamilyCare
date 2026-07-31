@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Heart,
+  HeartHandshake,
   History,
   Home,
   LogOut,
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/Button";
 import type { CircleRole } from "@/lib/types";
 
 const TABS = [
-  { href: "/for-you", label: "For You", icon: Home, roles: null },
+  { href: "/for-you", label: "Caring Hub", icon: Home, roles: null },
   { href: "/profile", label: "Profile", icon: UserCircle, roles: null },
   { href: "/members", label: "Members", icon: Users, roles: null },
   {
@@ -57,13 +57,13 @@ export function TopNav({
 
   return (
     <header className="border-b-2 border-border bg-white">
-      <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <span
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white sm:h-11 sm:w-11"
             aria-hidden="true"
           >
-            <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
+            <HeartHandshake className="h-5 w-5 sm:h-6 sm:w-6" />
           </span>
           <div className="min-w-0">
             <p className="truncate text-lg leading-tight font-bold sm:text-xl">
@@ -76,8 +76,8 @@ export function TopNav({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
-          <span className="rounded-full border-2 border-primary bg-primary/10 px-2 py-1 text-sm font-semibold text-primary sm:px-3 sm:text-base">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+          <span className="rounded-full border-2 border-primary bg-primary/10 px-2 py-1 text-sm font-semibold text-primary whitespace-nowrap sm:px-3 sm:text-base">
             {ROLE_BADGE_LABEL[role]}
           </span>
           {email && (
