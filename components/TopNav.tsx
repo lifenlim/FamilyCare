@@ -57,25 +57,27 @@ export function TopNav({
 
   return (
     <header className="border-b-2 border-border bg-white">
-      <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 px-4 py-4">
-        <div className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <span
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-white"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white sm:h-11 sm:w-11"
             aria-hidden="true"
           >
-            <Heart className="h-6 w-6" />
+            <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
           </span>
-          <div>
-            <p className="text-xl font-bold leading-tight">{circleName}</p>
+          <div className="min-w-0">
+            <p className="truncate text-lg leading-tight font-bold sm:text-xl">
+              {circleName}
+            </p>
             {patientName && (
-              <p className="text-base leading-tight text-muted">
+              <p className="truncate text-sm leading-tight text-muted sm:text-base">
                 {patientName}
               </p>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="rounded-full border-2 border-primary bg-primary/10 px-3 py-1 text-base font-semibold text-primary">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="rounded-full border-2 border-primary bg-primary/10 px-2 py-1 text-sm font-semibold text-primary sm:px-3 sm:text-base">
             {ROLE_BADGE_LABEL[role]}
           </span>
           {email && (
@@ -86,14 +88,14 @@ export function TopNav({
           <Button
             variant="secondary"
             onClick={handleSignOut}
-            className="min-h-0 px-4 py-2 text-base"
+            className="min-h-0 px-3 py-2 text-sm sm:px-4 sm:text-base"
           >
-            <LogOut className="h-5 w-5" aria-hidden="true" />
-            Sign out
+            <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+            <span className="hidden sm:inline">Sign out</span>
           </Button>
         </div>
       </div>
-      <nav className="mx-auto flex max-w-3xl gap-1 overflow-x-auto px-4">
+      <nav className="mx-auto flex max-w-3xl px-1 sm:gap-1 sm:px-4">
         {tabs.map((tab) => {
           const active = pathname.startsWith(tab.href);
           const Icon = tab.icon;
@@ -101,14 +103,14 @@ export function TopNav({
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex items-center gap-2 border-b-4 px-4 py-3 text-lg font-semibold whitespace-nowrap ${
+              className={`flex flex-1 flex-col items-center justify-center gap-1 border-b-4 px-1 py-2 text-xs font-semibold sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
                 active
                   ? "border-primary text-primary"
                   : "border-transparent text-muted hover:text-foreground"
               }`}
             >
-              <Icon className="h-5 w-5" aria-hidden="true" />
-              {tab.label}
+              <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+              <span className="truncate">{tab.label}</span>
             </Link>
           );
         })}

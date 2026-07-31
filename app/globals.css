@@ -47,9 +47,19 @@
   --font-sans: var(--font-geist-sans);
 }
 
-/* ~19px base so every rem-based Tailwind text size scales up together. */
+/* ~19px base on larger screens so every rem-based Tailwind text size scales
+   up together for readability. On phones, the full boost combined with our
+   already-generous padding made everything feel oversized, so it's dialed
+   back a bit below the sm breakpoint -- still notably larger than a typical
+   16px default. */
 html {
-  font-size: 118.75%;
+  font-size: 108%;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 118.75%;
+  }
 }
 
 body {

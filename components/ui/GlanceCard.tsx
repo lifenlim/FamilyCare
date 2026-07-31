@@ -15,18 +15,18 @@ export function GlanceCard({
 }) {
   return (
     <div
-      className={`flex-1 rounded-xl border-2 border-t-8 bg-white p-5 shadow-md ${ACCENT_BORDER[tone]}`}
+      className={`flex-1 rounded-xl border-2 border-t-8 bg-white p-4 shadow-md sm:p-5 ${ACCENT_BORDER[tone]}`}
     >
-      <h3 className="flex items-center gap-3 text-xl font-extrabold">
+      <h3 className="flex items-center gap-2 text-lg font-extrabold sm:gap-3 sm:text-xl">
         <span
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full shadow-sm ${ACCENT_SOLID[tone]}`}
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full shadow-sm sm:h-12 sm:w-12 ${ACCENT_SOLID[tone]}`}
           aria-hidden="true"
         >
-          <Icon className="h-6 w-6" />
+          <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
         </span>
         {title}
       </h3>
-      <div className="mt-4">{children}</div>
+      <div className="mt-3 sm:mt-4">{children}</div>
     </div>
   );
 }

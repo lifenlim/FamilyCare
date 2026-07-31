@@ -23,7 +23,9 @@ export default async function AppLayout({
         patientName={profile.patient_name}
         role={ctx.role}
       />
-      <div className="mx-auto max-w-3xl px-4 py-8">{children}</div>
+      <div className="mx-auto max-w-3xl px-3 py-6 sm:px-4 sm:py-8">
+        {children}
+      </div>
     </div>
   );
 }
