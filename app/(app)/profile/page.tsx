@@ -6,6 +6,7 @@ import {
   getCircleProfile,
 } from "@/lib/supabase/queries";
 import { PatientProfileCard } from "@/components/profile/PatientProfileCard";
+import { EmergencyContactCard } from "@/components/profile/EmergencyContactCard";
 import { PreferencesCard } from "@/components/profile/PreferencesCard";
 import { AllergiesSection } from "@/components/care-list/AllergiesSection";
 
@@ -30,6 +31,7 @@ export default async function ProfilePage() {
       </div>
 
       <PatientProfileCard profile={profile} canEdit={canEdit} />
+      <EmergencyContactCard profile={profile} canEdit={canEdit} />
       <AllergiesSection allergies={allergies} canEdit={canEdit} />
       <PreferencesCard profile={profile} canEdit={canEdit} />
     </div>

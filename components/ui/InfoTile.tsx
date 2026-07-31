@@ -13,15 +13,15 @@ export function InfoTile({
   tone?: AccentTone;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border-2 border-border bg-surface p-4">
+    <div className="flex items-start gap-3 rounded-xl border-2 border-border bg-surface p-3">
       <span
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${ACCENT_SOLID[tone]}`}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${ACCENT_SOLID[tone]}`}
         aria-hidden="true"
       >
-        <Icon className="h-5 w-5" />
+        <Icon className="h-4 w-4" />
       </span>
       <div>
-        <p className="text-base font-semibold tracking-wide text-muted uppercase">
+        <p className="text-sm font-semibold tracking-wide text-muted uppercase">
           {label}
         </p>
         <p className="mt-0.5 text-lg font-medium">{value || "Not set"}</p>

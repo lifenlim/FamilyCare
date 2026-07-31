@@ -130,36 +130,33 @@ export function PatientProfileCard({
         </form>
       ) : (
         <div className="mt-4 flex flex-col gap-4">
-          <div className="flex items-center gap-4 rounded-xl border-2 border-primary bg-primary/5 p-5">
+          <div className="flex items-center gap-3 rounded-xl border-2 border-primary bg-primary/5 p-4">
             <span
-              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm"
               aria-hidden="true"
             >
-              <User className="h-8 w-8" />
+              <User className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-xl font-bold">
                 {profile.patient_name || "Not set"}
               </p>
-              {dobAge && <p className="text-lg text-muted">{dobAge}</p>}
+              {dobAge && <p className="text-base text-muted">{dobAge}</p>}
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <InfoTile
-              icon={UsersRound}
-              label="Gender"
-              value={profile.gender ? GENDER_LABEL[profile.gender] : ""}
-              tone="purple"
-            />
-            <InfoTile
-              icon={Languages}
-              label="Preferred language"
-              value={profile.preferred_language ?? ""}
-              tone="blue"
-            />
-          </div>
-
+          <InfoTile
+            icon={UsersRound}
+            label="Gender"
+            value={profile.gender ? GENDER_LABEL[profile.gender] : ""}
+            tone="purple"
+          />
+          <InfoTile
+            icon={Languages}
+            label="Preferred language"
+            value={profile.preferred_language ?? ""}
+            tone="blue"
+          />
           <InfoTile
             icon={FileText}
             label="Notes"

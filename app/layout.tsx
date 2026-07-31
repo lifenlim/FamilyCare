@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { BRAND_ICON_VERSION } from "@/lib/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,12 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://family-care-beta.vercel.app"),
   title: "FamilyCare",
   description: "Shared care coordination for families",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "FamilyCare",
+  },
+  icons: {
+    icon: `/icons/icon-192.png?v=${BRAND_ICON_VERSION}`,
+    apple: `/icons/icon-512.png?v=${BRAND_ICON_VERSION}`,
+  },
+  openGraph: {
+    title: "FamilyCare",
+    description: "Shared care coordination for families",
+    images: [`/icons/icon-512.png?v=${BRAND_ICON_VERSION}`],
   },
 };
 

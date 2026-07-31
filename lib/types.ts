@@ -27,6 +27,9 @@ export interface CircleProfile {
   food_preference: string | null;
   drink_preference: string | null;
   hobbies_interests: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  emergency_contact_relationship: string | null;
 }
 
 export function calculateAge(dateOfBirth: string): number {

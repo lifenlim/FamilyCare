@@ -50,3 +50,26 @@ export async function savePreferences(formData: FormData): Promise<void> {
 
   revalidatePath("/profile");
 }
+
+export async function saveEmergencyContact(formData: FormData): Promise<void> {
+  const { supabase, ctx } = await requireEditor();
+
+  const emergency_contact_name =
+    ((formData.get("emergency_contact_name") as string) || "").trim() || null;
+  const emergency_contact_phone =
+    ((formData.get("emergency_contact_phone") as string) || "").trim() || null;
+  const emergency_contact_relationship =
+    ((formData.get("emergency_contact_relationship") as string) || "").trim() || null;
+
+  const { error } = await supabase
+    .from("care_circles")
+    .update({
+      emergency_contact_name,
+      emergency_contact_phone,
+      emergency_contact_relationship,
+    })
+    .eq("id", ctx.circleId);
+  if (error) throw error;
+
+  revalidatePath("/profile");
+}

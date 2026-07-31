@@ -43,7 +43,7 @@ export async function getCircleContext(
     const circle = membership.care_circles as unknown as { name: string } | null;
     return {
       circleId: membership.circle_id,
-      circleName: circle?.name ?? "Care Circle",
+      circleName: circle?.name ?? "Family Care",
       role: membership.role as MemberRole,
     };
   }
@@ -65,7 +65,7 @@ export async function getCircleProfile(
   const { data, error } = await supabase
     .from("care_circles")
     .select(
-      "id, name, patient_name, date_of_birth, gender, preferred_language, profile_notes, food_preference, drink_preference, hobbies_interests",
+      "id, name, patient_name, date_of_birth, gender, preferred_language, profile_notes, food_preference, drink_preference, hobbies_interests, emergency_contact_name, emergency_contact_phone, emergency_contact_relationship",
     )
     .eq("id", circleId)
     .single();

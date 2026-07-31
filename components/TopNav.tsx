@@ -2,16 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  HeartHandshake,
-  History,
-  Home,
-  LogOut,
-  UserCircle,
-  Users,
-} from "lucide-react";
+import { History, Home, LogOut, UserCircle, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { BRAND_ICON_VERSION } from "@/lib/brand";
 import type { CircleRole } from "@/lib/types";
 
 const TABS = [
@@ -60,10 +54,17 @@ export function TopNav({
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white sm:h-11 sm:w-11"
+            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary/20 bg-white sm:h-11 sm:w-11"
             aria-hidden="true"
           >
-            <HeartHandshake className="h-5 w-5 sm:h-6 sm:w-6" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- small brand mark, skip the image optimizer's caching layer */}
+            <img
+              src={`/icons/logo.png?v=${BRAND_ICON_VERSION}`}
+              alt=""
+              width={44}
+              height={44}
+              className="h-full w-full object-cover"
+            />
           </span>
           <div className="min-w-0">
             <p className="truncate text-lg leading-tight font-bold sm:text-xl">

@@ -14,7 +14,7 @@ create table if not exists public.profiles (
 create table if not exists public.care_circles (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references public.profiles(id) on delete cascade unique,
-  name text not null default 'My Care Circle',
+  name text not null default 'Family Care',
   patient_name text,
   date_of_birth date,
   gender text check (gender in ('male', 'female', 'other', 'prefer_not_to_say')),
@@ -23,6 +23,9 @@ create table if not exists public.care_circles (
   food_preference text,
   drink_preference text,
   hobbies_interests text,
+  emergency_contact_name text,
+  emergency_contact_phone text,
+  emergency_contact_relationship text,
   created_at timestamptz not null default now()
 );
 
@@ -399,7 +402,7 @@ begin
   end if;
 
   insert into public.care_circles (owner_id, name)
-  values (auth.uid(), 'My Care Circle')
+  values (auth.uid(), 'Family Care')
   returning * into v_circle;
 
   return v_circle;
