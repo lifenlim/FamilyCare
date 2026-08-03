@@ -85,8 +85,8 @@ export function TopNav({
             )}
           </div>
         </div>
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
-          <span className="shrink-0 rounded-full border-2 border-primary bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap sm:text-sm">
+        <div className="flex items-center justify-end gap-2 sm:gap-3">
+          <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary whitespace-nowrap sm:text-xs">
             {roleBadgeLabel[role]}
           </span>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -98,9 +98,9 @@ export function TopNav({
             <Button
               variant="secondary"
               onClick={handleSignOut}
-              className="min-h-0 shrink-0 px-3 py-2 text-sm sm:px-4 sm:text-base"
+              className="min-h-0 shrink-0 px-2 py-1 text-xs sm:px-3 sm:text-sm"
             >
-              <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
             </Button>
           </div>
