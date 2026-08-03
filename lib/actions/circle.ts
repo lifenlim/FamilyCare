@@ -3,13 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCircleContext } from "@/lib/supabase/queries";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { MemberRole } from "@/lib/types";
 
 export async function createInvite(role: MemberRole): Promise<string> {
   const supabase = await createClient();
-  const ctx = await getCircleContext(supabase);
+  const [ctx, dictionary] = await Promise.all([
+    getCircleContext(supabase),
+    getDictionary(),
+  ]);
   if (ctx.role !== "owner") {
-    throw new Error("Only the account owner can invite people.");
+    throw new Error(dictionary.members.ownerOnlyInvite);
   }
 
   const {
@@ -46,10 +51,25 @@ export async function revokeMember(memberId: string): Promise<void> {
   revalidatePath("/members");
 }
 
+// accept_invite (0001_init.sql) raises these exact messages -- translate the
+// ones we know about and fall back to the raw message for anything else.
+const ACCEPT_INVITE_ERRORS: Record<string, keyof Dictionary["invite"]["errors"]> = {
+  "Must be signed in to accept an invite": "mustBeSignedIn",
+  "Invite not found": "notFound",
+  "This invite has been revoked": "revoked",
+  "This invite has expired": "expired",
+  "This invite has already been used": "alreadyUsed",
+  "You already own this care circle": "alreadyOwn",
+};
+
 export async function acceptInvite(token: string): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.rpc("accept_invite", { p_token: token });
-  if (error) throw new Error(error.message);
+  if (error) {
+    const dictionary = await getDictionary();
+    const key = ACCEPT_INVITE_ERRORS[error.message];
+    throw new Error(key ? dictionary.invite.errors[key] : error.message);
+  }
   revalidatePath("/for-you");
 }
 

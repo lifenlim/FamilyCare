@@ -24,8 +24,8 @@ export function MemberList({
   const [pendingId, setPendingId] = useState<string | null>(null);
 
   const roleLabel: Record<string, string> = {
-    owner: dictionary.members.roleAccountOwner,
-    editor: dictionary.members.roleCaretaker,
+    owner: dictionary.nav.roleOwner,
+    editor: dictionary.nav.roleCareTaker,
     viewer: dictionary.nav.roleFamilyMember,
   };
 

@@ -3,12 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCircleContext } from "@/lib/supabase/queries";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 async function requireEditor() {
   const supabase = await createClient();
-  const ctx = await getCircleContext(supabase);
+  const [ctx, dictionary] = await Promise.all([
+    getCircleContext(supabase),
+    getDictionary(),
+  ]);
   if (ctx.role === "viewer") {
-    throw new Error("Family members can view the profile but not edit it.");
+    throw new Error(dictionary.common.viewerReadOnlyProfile);
   }
   return { supabase, ctx };
 }

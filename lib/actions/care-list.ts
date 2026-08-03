@@ -4,18 +4,24 @@ import { revalidatePath } from "next/cache";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { getCircleContext } from "@/lib/supabase/queries";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { CircleContext } from "@/lib/types";
 
 async function requireEditor(): Promise<{
   supabase: SupabaseClient;
   ctx: CircleContext;
+  dictionary: Dictionary;
 }> {
   const supabase = await createClient();
-  const ctx = await getCircleContext(supabase);
+  const [ctx, dictionary] = await Promise.all([
+    getCircleContext(supabase),
+    getDictionary(),
+  ]);
   if (ctx.role === "viewer") {
-    throw new Error("Family members can view the care list but not edit it.");
+    throw new Error(dictionary.common.viewerReadOnlyCareInfo);
   }
-  return { supabase, ctx };
+  return { supabase, ctx, dictionary };
 }
 
 async function logEdit(
@@ -45,15 +51,15 @@ function revalidateCareList() {
 }
 
 export async function saveMedication(formData: FormData): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, dictionary } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
-  if (!name) throw new Error("Medication name is required.");
+  if (!name) throw new Error(dictionary.medications.nameRequired);
   const dosageRaw = (formData.get("dose_amount") as string) ?? "";
-  if (dosageRaw.trim() === "") throw new Error("Per-dosage amount is required.");
+  if (dosageRaw.trim() === "") throw new Error(dictionary.medications.dosageRequired);
   const dose_amount = Number(dosageRaw);
   const frequency = ((formData.get("frequency") as string) || "").trim();
-  if (!frequency) throw new Error("Please choose how often it's taken.");
+  if (!frequency) throw new Error(dictionary.medications.frequencyRequired);
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
   if (id) {
@@ -66,7 +72,7 @@ export async function saveMedication(formData: FormData): Promise<void> {
   } else {
     const initialBalanceRaw = (formData.get("initial_balance") as string) ?? "";
     if (initialBalanceRaw.trim() === "") {
-      throw new Error("Current medication balance is required.");
+      throw new Error(dictionary.medications.balanceRequired);
     }
     const initialBalance = Number(initialBalanceRaw);
     const { data, error } = await supabase
@@ -121,9 +127,9 @@ export async function topUpMedication(
   amount: number,
   medicationName: string,
 ): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, dictionary } = await requireEditor();
   if (!Number.isFinite(amount) || amount <= 0) {
-    throw new Error("Enter a top-up amount greater than zero.");
+    throw new Error(dictionary.medications.topUpAmountInvalid);
   }
 
   const { data: med, error: fetchErr } = await supabase
@@ -154,12 +160,12 @@ export async function topUpMedication(
 }
 
 export async function saveAppointment(formData: FormData): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, dictionary } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const title = (formData.get("title") as string).trim();
-  if (!title) throw new Error("Appointment title is required.");
+  if (!title) throw new Error(dictionary.appointments.titleRequired);
   const appointment_at = formData.get("appointment_at") as string;
-  if (!appointment_at) throw new Error("Appointment date and time is required.");
+  if (!appointment_at) throw new Error(dictionary.appointments.dateTimeRequired);
   const location = ((formData.get("location") as string) || "").trim() || null;
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
@@ -211,10 +217,10 @@ export async function deleteAppointment(
 }
 
 export async function saveAllergy(formData: FormData): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, dictionary } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
-  if (!name) throw new Error("Allergy name is required.");
+  if (!name) throw new Error(dictionary.allergies.nameRequired);
   const severity = ((formData.get("severity") as string) || "").trim() || null;
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
@@ -249,14 +255,14 @@ export async function deleteAllergy(
 }
 
 export async function saveCareTask(formData: FormData): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, dictionary } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
-  if (!name) throw new Error("Task name is required.");
+  if (!name) throw new Error(dictionary.tasks.nameRequired);
 
   const scheduleType = (formData.get("schedule_type") as string) || "";
   if (scheduleType !== "ongoing" && scheduleType !== "one_time") {
-    throw new Error("Please choose Recurring or One Time.");
+    throw new Error(dictionary.tasks.scheduleTypeRequired);
   }
 
   let recurrence: string | null = null;
@@ -264,12 +270,12 @@ export async function saveCareTask(formData: FormData): Promise<void> {
 
   if (scheduleType === "ongoing") {
     recurrence = ((formData.get("recurrence") as string) || "").trim();
-    if (!recurrence) throw new Error("Please choose how often this repeats.");
+    if (!recurrence) throw new Error(dictionary.tasks.recurrenceRequired);
   } else {
     // TaskForm already converts the local datetime-local value to ISO
     // before calling this action, same as AppointmentForm does.
     scheduledAt = (formData.get("scheduled_at") as string) || "";
-    if (!scheduledAt) throw new Error("Please choose the date and time.");
+    if (!scheduledAt) throw new Error(dictionary.tasks.dateTimeRequired);
   }
 
   const status = ((formData.get("status") as string) || "active").trim();
@@ -329,7 +335,7 @@ export async function toggleChecklist(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not signed in");
+  if (!user) throw new Error((await getDictionary()).common.notSignedIn);
 
   const today = new Date().toISOString().slice(0, 10);
   const { error } = await supabase.from("dose_checklist").upsert(
@@ -354,7 +360,7 @@ export async function toggleTaskChecklist(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not signed in");
+  if (!user) throw new Error((await getDictionary()).common.notSignedIn);
 
   const today = new Date().toISOString().slice(0, 10);
   const { error } = await supabase.from("task_checklist").upsert(

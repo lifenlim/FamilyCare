@@ -11,6 +11,9 @@ export interface Dictionary {
     notSet: string;
     optional: string;
     notesLabel: string;
+    notSignedIn: string;
+    viewerReadOnlyCareInfo: string;
+    viewerReadOnlyProfile: string;
   };
   nav: {
     caringHub: string;
@@ -78,6 +81,11 @@ export interface Dictionary {
     addToBalanceLabel: string;
     confirmTopUp: string;
     couldNotTopUp: string;
+    nameRequired: string;
+    dosageRequired: string;
+    frequencyRequired: string;
+    balanceRequired: string;
+    topUpAmountInvalid: string;
   };
   appointments: {
     heading: string;
@@ -89,6 +97,8 @@ export interface Dictionary {
     dateAndTime: string;
     locationLabel: string;
     couldNotSave: string;
+    titleRequired: string;
+    dateTimeRequired: string;
   };
   tasks: {
     heading: string;
@@ -105,6 +115,10 @@ export interface Dictionary {
     selectFrequency: string;
     statusLabel: string;
     couldNotSave: string;
+    nameRequired: string;
+    scheduleTypeRequired: string;
+    recurrenceRequired: string;
+    dateTimeRequired: string;
   };
   allergies: {
     heading: string;
@@ -115,6 +129,7 @@ export interface Dictionary {
     nameLabel: string;
     severityLabel: string;
     couldNotSave: string;
+    nameRequired: string;
   };
   profile: {
     heading: string;
@@ -154,8 +169,6 @@ export interface Dictionary {
     peopleInCircle: string;
     accountOwner: string;
     circleMember: string;
-    roleAccountOwner: string;
-    roleCaretaker: string;
     noOneJoinedYet: string;
     pendingInvites: string;
     waitingForAccept: string;
@@ -172,6 +185,7 @@ export interface Dictionary {
     shareThisLink: string;
     copyLink: string;
     copied: string;
+    ownerOnlyInvite: string;
   };
   activity: {
     heading: string;
@@ -211,6 +225,14 @@ export interface Dictionary {
     somethingWentWrong: string;
     caretakerDescription: string;
     familyMemberDescription: string;
+    errors: {
+      mustBeSignedIn: string;
+      notFound: string;
+      revoked: string;
+      expired: string;
+      alreadyUsed: string;
+      alreadyOwn: string;
+    };
   };
   feedback: {
     heading: string;
@@ -222,6 +244,7 @@ export interface Dictionary {
     submit: string;
     submitting: string;
     couldNotSubmit: string;
+    messageRequired: string;
     thankYouTitle: string;
     thankYouBody: string;
     sendAnother: string;

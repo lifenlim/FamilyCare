@@ -23,7 +23,7 @@ export function InviteGenerator() {
     },
     {
       value: "editor",
-      label: dictionary.members.roleCaretaker,
+      label: dictionary.nav.roleCareTaker,
       hint: dictionary.members.careTakerHint,
     },
   ];
