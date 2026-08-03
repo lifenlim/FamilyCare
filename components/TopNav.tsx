@@ -60,50 +60,50 @@ export function TopNav({
         <LanguageSwitcher />
       </div>
       <div className="mx-auto flex max-w-3xl flex-col gap-2 px-3 pb-3 sm:px-4 sm:pb-4">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
-            <span
-              className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary/20 bg-white sm:h-11 sm:w-11"
-              aria-hidden="true"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- small brand mark, skip the image optimizer's caching layer */}
-              <img
-                src={`/icons/logo.png?v=${BRAND_ICON_VERSION}`}
-                alt=""
-                width={44}
-                height={44}
-                className="h-full w-full object-cover"
-              />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-lg leading-tight font-bold sm:text-xl">
-                {circleName}
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary/20 bg-white sm:h-11 sm:w-11"
+            aria-hidden="true"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- small brand mark, skip the image optimizer's caching layer */}
+            <img
+              src={`/icons/logo.png?v=${BRAND_ICON_VERSION}`}
+              alt=""
+              width={44}
+              height={44}
+              className="h-full w-full object-cover"
+            />
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-lg leading-tight font-bold sm:text-xl">
+              {circleName}
+            </p>
+            {patientName && (
+              <p className="truncate text-sm leading-tight text-muted sm:text-base">
+                {patientName}
               </p>
-              {patientName && (
-                <p className="truncate text-sm leading-tight text-muted sm:text-base">
-                  {patientName}
-                </p>
-              )}
-            </div>
+            )}
           </div>
-          <span className="shrink-0 rounded-full border-2 border-primary bg-primary/10 px-2 py-1 text-sm font-semibold text-primary whitespace-nowrap sm:px-3 sm:text-base">
+        </div>
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          <span className="shrink-0 rounded-full border-2 border-primary bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap sm:text-sm">
             {roleBadgeLabel[role]}
           </span>
-        </div>
-        <div className="flex items-center justify-end gap-2 sm:gap-3">
-          {email && (
-            <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
-              {email}
-            </span>
-          )}
-          <Button
-            variant="secondary"
-            onClick={handleSignOut}
-            className="min-h-0 shrink-0 px-3 py-2 text-sm sm:px-4 sm:text-base"
-          >
-            <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-            <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
-          </Button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {email && (
+              <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
+                {email}
+              </span>
+            )}
+            <Button
+              variant="secondary"
+              onClick={handleSignOut}
+              className="min-h-0 shrink-0 px-3 py-2 text-sm sm:px-4 sm:text-base"
+            >
+              <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
+            </Button>
+          </div>
         </div>
       </div>
       <nav className="mx-auto flex max-w-3xl px-1 sm:gap-1 sm:px-4">
