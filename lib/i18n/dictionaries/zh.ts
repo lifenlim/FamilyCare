@@ -122,6 +122,7 @@ const zh: Dictionary = {
   },
   profile: {
     heading: "个人资料",
+    subheading: "关于",
     recipientProfile: "受照护者资料",
     fullNameLabel: "姓名",
     dobLabel: "出生日期",
@@ -151,6 +152,7 @@ const zh: Dictionary = {
   },
   members: {
     heading: "成员",
+    subheading: "名单",
     inviteSomeone: "邀请他人",
     inviteBlurb: "生成一个链接并分享给对方，对方只需使用自己的邮箱登录，无需另外注册账号。",
     peopleInCircle: "圈子成员",
@@ -177,6 +179,7 @@ const zh: Dictionary = {
   },
   activity: {
     heading: "活动记录",
+    subheading: "历史",
     activityLog: "活动记录",
     activityLogBlurb: "查看近期谁查看或编辑了关怀清单。",
     viewerNoAccess: "家庭成员无法查看活动记录。",

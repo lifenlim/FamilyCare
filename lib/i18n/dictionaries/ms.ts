@@ -127,6 +127,7 @@ const ms: Dictionary = {
   },
   profile: {
     heading: "Profil",
+    subheading: "Tentang",
     recipientProfile: "Profil penerima jagaan",
     fullNameLabel: "Nama penuh",
     dobLabel: "Tarikh lahir",
@@ -156,6 +157,7 @@ const ms: Dictionary = {
   },
   members: {
     heading: "Ahli",
+    subheading: "Senarai",
     inviteSomeone: "Jemput seseorang",
     inviteBlurb:
       "Jana pautan dan kongsikan dengan mereka. Mereka akan log masuk dengan e-mel sendiri — tiada persediaan akaun berasingan diperlukan.",
@@ -183,6 +185,7 @@ const ms: Dictionary = {
   },
   activity: {
     heading: "Aktiviti",
+    subheading: "Sejarah",
     activityLog: "Log aktiviti",
     activityLogBlurb: "Siapa yang melihat atau menyunting senarai jagaan baru-baru ini.",
     viewerNoAccess: "Ahli keluarga tidak mempunyai akses kepada log aktiviti.",

@@ -118,6 +118,7 @@ export interface Dictionary {
   };
   profile: {
     heading: string;
+    subheading: string;
     recipientProfile: string;
     fullNameLabel: string;
     dobLabel: string;
@@ -147,6 +148,7 @@ export interface Dictionary {
   };
   members: {
     heading: string;
+    subheading: string;
     inviteSomeone: string;
     inviteBlurb: string;
     peopleInCircle: string;
@@ -173,6 +175,7 @@ export interface Dictionary {
   };
   activity: {
     heading: string;
+    subheading: string;
     activityLog: string;
     activityLogBlurb: string;
     viewerNoAccess: string;

@@ -123,6 +123,7 @@ const en: Dictionary = {
   },
   profile: {
     heading: "Profile",
+    subheading: "About",
     recipientProfile: "Recipient profile",
     fullNameLabel: "Full name",
     dobLabel: "Date of birth",
@@ -152,6 +153,7 @@ const en: Dictionary = {
   },
   members: {
     heading: "Members",
+    subheading: "People",
     inviteSomeone: "Invite someone",
     inviteBlurb:
       "Generate a link and share it with them. They'll sign in with their own email — no separate account setup needed.",
@@ -179,6 +181,7 @@ const en: Dictionary = {
   },
   activity: {
     heading: "Activity",
+    subheading: "History",
     activityLog: "Activity log",
     activityLogBlurb: "Who viewed or edited the care list recently.",
     viewerNoAccess: "Family members don't have access to the activity log.",

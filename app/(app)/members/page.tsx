@@ -28,7 +28,9 @@ export default async function MembersPage() {
           <Users className="h-6 w-6 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
           {dictionary.members.heading}
         </h1>
-        <p className="mt-1 text-base text-muted sm:text-lg">{ctx.circleName}</p>
+        <p className="mt-1 text-base text-muted sm:text-lg">
+          {dictionary.members.subheading}
+        </p>
       </div>
 
       {ctx.role === "owner" && (
