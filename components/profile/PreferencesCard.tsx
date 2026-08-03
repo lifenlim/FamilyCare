@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Field, TextInput } from "@/components/ui/Field";
 import { InfoTile } from "@/components/ui/InfoTile";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { CircleProfile } from "@/lib/types";
 
 export function PreferencesCard({
@@ -16,6 +17,7 @@ export function PreferencesCard({
   profile: CircleProfile;
   canEdit: boolean;
 }) {
+  const { dictionary } = useLocale();
   const [editing, setEditing] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -31,7 +33,7 @@ export function PreferencesCard({
     } catch (err) {
       setStatus("error");
       setMessage(
-        err instanceof Error ? err.message : "Could not save preferences.",
+        err instanceof Error ? err.message : dictionary.preferences.couldNotSave,
       );
     }
   }
@@ -41,7 +43,7 @@ export function PreferencesCard({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
           <Sparkles className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
-          Personal preferences
+          {dictionary.preferences.heading}
         </h2>
         {canEdit && !editing && (
           <Button
@@ -50,34 +52,34 @@ export function PreferencesCard({
             onClick={() => setEditing(true)}
           >
             <Pencil className="h-5 w-5" aria-hidden="true" />
-            Edit
+            {dictionary.common.edit}
           </Button>
         )}
       </div>
 
       {editing ? (
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-          <Field label="Food preference" htmlFor="food-preference">
+          <Field label={dictionary.preferences.foodLabel} htmlFor="food-preference">
             <TextInput
               id="food-preference"
               name="food_preference"
-              placeholder="e.g. Loves soup, avoids spicy food"
+              placeholder={dictionary.preferences.foodPlaceholder}
               defaultValue={profile.food_preference ?? ""}
             />
           </Field>
-          <Field label="Drink preference" htmlFor="drink-preference">
+          <Field label={dictionary.preferences.drinkLabel} htmlFor="drink-preference">
             <TextInput
               id="drink-preference"
               name="drink_preference"
-              placeholder="e.g. Warm tea, no coffee after noon"
+              placeholder={dictionary.preferences.drinkPlaceholder}
               defaultValue={profile.drink_preference ?? ""}
             />
           </Field>
-          <Field label="Hobbies & interests" htmlFor="hobbies-interests">
+          <Field label={dictionary.preferences.hobbiesLabel} htmlFor="hobbies-interests">
             <TextInput
               id="hobbies-interests"
               name="hobbies_interests"
-              placeholder="e.g. Gardening, jigsaw puzzles"
+              placeholder={dictionary.preferences.hobbiesPlaceholder}
               defaultValue={profile.hobbies_interests ?? ""}
             />
           </Field>
@@ -91,11 +93,11 @@ export function PreferencesCard({
           <div className="flex flex-wrap gap-3">
             <Button type="submit" disabled={status === "saving"}>
               <Check className="h-5 w-5" aria-hidden="true" />
-              {status === "saving" ? "Saving..." : "Save"}
+              {status === "saving" ? dictionary.common.saving : dictionary.common.save}
             </Button>
             <Button type="button" variant="secondary" onClick={() => setEditing(false)}>
               <X className="h-5 w-5" aria-hidden="true" />
-              Cancel
+              {dictionary.common.cancel}
             </Button>
           </div>
         </form>
@@ -103,19 +105,19 @@ export function PreferencesCard({
         <div className="mt-4 flex flex-col gap-3">
           <InfoTile
             icon={Utensils}
-            label="Food preference"
+            label={dictionary.preferences.foodLabel}
             value={profile.food_preference ?? ""}
             tone="gold"
           />
           <InfoTile
             icon={Coffee}
-            label="Drink preference"
+            label={dictionary.preferences.drinkLabel}
             value={profile.drink_preference ?? ""}
             tone="teal"
           />
           <InfoTile
             icon={Sparkles}
-            label="Hobbies & interests"
+            label={dictionary.preferences.hobbiesLabel}
             value={profile.hobbies_interests ?? ""}
             tone="purple"
           />

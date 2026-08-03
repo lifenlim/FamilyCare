@@ -5,6 +5,7 @@ import { Check, X } from "lucide-react";
 import { saveAppointment } from "@/lib/actions/care-list";
 import { Button } from "@/components/ui/Button";
 import { Field, TextArea, TextInput } from "@/components/ui/Field";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Appointment } from "@/lib/types";
 
 function toLocalInputValue(iso?: string) {
@@ -23,6 +24,7 @@ export function AppointmentForm({
   appointment?: Appointment;
   onDone: () => void;
 }) {
+  const { dictionary } = useLocale();
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -38,7 +40,7 @@ export function AppointmentForm({
     } catch (err) {
       setStatus("error");
       setMessage(
-        err instanceof Error ? err.message : "Could not save appointment.",
+        err instanceof Error ? err.message : dictionary.appointments.couldNotSave,
       );
     }
   }
@@ -48,7 +50,7 @@ export function AppointmentForm({
       {appointment && (
         <input type="hidden" name="id" value={appointment.id} />
       )}
-      <Field label="What is the appointment for?" htmlFor="appt-title">
+      <Field label={dictionary.appointments.whatFor} htmlFor="appt-title">
         <TextInput
           id="appt-title"
           name="title"
@@ -56,7 +58,7 @@ export function AppointmentForm({
           defaultValue={appointment?.title}
         />
       </Field>
-      <Field label="Date and time" htmlFor="appt-when">
+      <Field label={dictionary.appointments.dateAndTime} htmlFor="appt-when">
         <TextInput
           id="appt-when"
           name="appointment_at"
@@ -65,14 +67,14 @@ export function AppointmentForm({
           defaultValue={toLocalInputValue(appointment?.appointment_at)}
         />
       </Field>
-      <Field label="Location (optional)" htmlFor="appt-location">
+      <Field label={dictionary.appointments.locationLabel} htmlFor="appt-location">
         <TextInput
           id="appt-location"
           name="location"
           defaultValue={appointment?.location ?? ""}
         />
       </Field>
-      <Field label="Notes (optional)" htmlFor="appt-notes">
+      <Field label={dictionary.common.notesLabel} htmlFor="appt-notes">
         <TextArea
           id="appt-notes"
           name="notes"
@@ -89,11 +91,11 @@ export function AppointmentForm({
       <div className="flex flex-wrap gap-3">
         <Button type="submit" disabled={status === "saving"}>
           <Check className="h-5 w-5" aria-hidden="true" />
-          {status === "saving" ? "Saving..." : "Save"}
+          {status === "saving" ? dictionary.common.saving : dictionary.common.save}
         </Button>
         <Button type="button" variant="secondary" onClick={onDone}>
           <X className="h-5 w-5" aria-hidden="true" />
-          Cancel
+          {dictionary.common.cancel}
         </Button>
       </div>
     </form>

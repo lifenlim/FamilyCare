@@ -1,7 +1,11 @@
+"use client";
+
 import { AlertTriangle } from "lucide-react";
 import { isRunningLow, type Medication } from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export function LowStockBanner({ medications }: { medications: Medication[] }) {
+  const { dictionary } = useLocale();
   const lowMeds = medications.filter(isRunningLow);
   if (lowMeds.length === 0) return null;
 
@@ -12,8 +16,10 @@ export function LowStockBanner({ medications }: { medications: Medication[] }) {
         aria-hidden="true"
       />
       <p className="text-lg font-semibold text-white">
-        {lowMeds.length} medication{lowMeds.length === 1 ? " is" : "s are"}{" "}
-        running low — {lowMeds.map((m) => m.name).join(", ")}. Time to top up!
+        {dictionary.forYou.lowStockMessage(
+          lowMeds.length,
+          lowMeds.map((m) => m.name).join(", "),
+        )}
       </p>
     </div>
   );

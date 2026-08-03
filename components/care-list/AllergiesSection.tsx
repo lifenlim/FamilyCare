@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { AllergyForm } from "./AllergyForm";
 import { deleteAllergy } from "@/lib/actions/care-list";
-import { SEVERITY_LABEL, type AllergySeverity, type Allergy } from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { AllergySeverity, Allergy } from "@/lib/types";
 
 const SEVERITY_TONE: Record<AllergySeverity, "success" | "warning" | "danger"> = {
   low: "success",
@@ -22,6 +23,7 @@ export function AllergiesSection({
   allergies: Allergy[];
   canEdit: boolean;
 }) {
+  const { dictionary } = useLocale();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingNew, setAddingNew] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function AllergiesSection({
       setRemovingId(null);
     } catch (err) {
       setDeleteError(
-        err instanceof Error ? err.message : "Could not remove allergy.",
+        err instanceof Error ? err.message : dictionary.allergies.couldNotRemove,
       );
     } finally {
       setDeletingId(null);
@@ -48,7 +50,7 @@ export function AllergiesSection({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
           <AlertTriangle className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
-          Allergies
+          {dictionary.allergies.heading}
         </h2>
         {canEdit && !addingNew && (
           <Button
@@ -56,7 +58,7 @@ export function AllergiesSection({
             onClick={() => setAddingNew(true)}
           >
             <Plus className="h-5 w-5" aria-hidden="true" />
-            Add allergy
+            {dictionary.allergies.addAllergy}
           </Button>
         )}
       </div>
@@ -69,7 +71,7 @@ export function AllergiesSection({
 
       <div className="mt-4 flex flex-col gap-3">
         {allergies.length === 0 && (
-          <p className="text-lg text-muted">No allergies recorded.</p>
+          <p className="text-lg text-muted">{dictionary.allergies.noAllergiesYet}</p>
         )}
         {allergies.map((a) => {
           if (editingId === a.id) {
@@ -92,7 +94,7 @@ export function AllergiesSection({
                   <p className="text-lg font-semibold sm:text-xl">{a.name}</p>
                   {a.severity && (
                     <Badge tone={SEVERITY_TONE[a.severity]}>
-                      {SEVERITY_LABEL[a.severity]}
+                      {dictionary.enums.severity[a.severity]}
                     </Badge>
                   )}
                   {a.notes && (
@@ -107,7 +109,7 @@ export function AllergiesSection({
                       onClick={() => setEditingId(a.id)}
                     >
                       <Pencil className="h-5 w-5" aria-hidden="true" />
-                      Edit
+                      {dictionary.common.edit}
                     </Button>
                     <Button
                       variant="danger"
@@ -118,7 +120,7 @@ export function AllergiesSection({
                       }}
                     >
                       <Trash2 className="h-5 w-5" aria-hidden="true" />
-                      Remove
+                      {dictionary.common.remove}
                     </Button>
                   </div>
                 )}
@@ -127,7 +129,7 @@ export function AllergiesSection({
               {removingId === a.id && (
                 <div className="flex flex-col gap-3 rounded-lg border-2 border-danger bg-white p-3">
                   <p className="text-lg font-medium">
-                    Remove {a.name}? This can&apos;t be undone.
+                    {dictionary.allergies.removeConfirm(a.name)}
                   </p>
                   {deleteError && (
                     <p role="alert" className="text-lg text-danger">
@@ -142,7 +144,9 @@ export function AllergiesSection({
                       onClick={() => handleConfirmRemove(a.id, a.name)}
                     >
                       <Trash2 className="h-5 w-5" aria-hidden="true" />
-                      {deletingId === a.id ? "Removing..." : "Yes, remove"}
+                      {deletingId === a.id
+                        ? dictionary.common.removing
+                        : dictionary.common.yesRemove}
                     </Button>
                     <Button
                       variant="secondary"
@@ -150,7 +154,7 @@ export function AllergiesSection({
                       disabled={deletingId === a.id}
                       onClick={() => setRemovingId(null)}
                     >
-                      Cancel
+                      {dictionary.common.cancel}
                     </Button>
                   </div>
                 </div>

@@ -13,9 +13,11 @@ import { MedicationsSection } from "@/components/care-list/MedicationsSection";
 import { AppointmentsSection } from "@/components/care-list/AppointmentsSection";
 import { TasksSection } from "@/components/care-list/TasksSection";
 import { ViewLogger } from "@/components/care-list/ViewLogger";
+import { getDictionary, getLocale } from "@/lib/i18n/getDictionary";
+import { LOCALE_TAG } from "@/lib/i18n/config";
 
-function formatToday() {
-  return new Date().toLocaleDateString(undefined, {
+function formatToday(localeTag: string) {
+  return new Date().toLocaleDateString(localeTag, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -26,6 +28,10 @@ function formatToday() {
 export default async function ForYouPage() {
   const supabase = await createClient();
   const ctx = await getCircleContext(supabase);
+  const [dictionary, locale] = await Promise.all([
+    getDictionary(),
+    getLocale(),
+  ]);
 
   const [medications, appointments, tasks] = await Promise.all([
     getMedications(supabase, ctx.circleId),
@@ -49,8 +55,12 @@ export default async function ForYouPage() {
     <div className="flex flex-col gap-8">
       <ViewLogger circleId={ctx.circleId} />
       <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">Today, at a glance</h1>
-        <p className="mt-1 text-base text-muted sm:text-lg">{formatToday()}</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">
+          {dictionary.forYou.heading}
+        </h1>
+        <p className="mt-1 text-base text-muted sm:text-lg">
+          {formatToday(LOCALE_TAG[locale])}
+        </p>
       </div>
       <LowStockBanner medications={medications} />
 

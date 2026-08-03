@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react";
 import { toggleTaskChecklist } from "@/lib/actions/care-list";
 import { CheckToggle } from "@/components/ui/CheckToggle";
-import { RECURRENCE_LABEL, type CareTask, type TaskChecklistEntry } from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { CareTask, TaskChecklistEntry } from "@/lib/types";
 
 export function TaskChecklistSection({
   tasks,
@@ -12,6 +13,7 @@ export function TaskChecklistSection({
   tasks: CareTask[];
   checklist: TaskChecklistEntry[];
 }) {
+  const { dictionary } = useLocale();
   const [, startTransition] = useTransition();
   const [optimistic, setOptimistic] = useState<Record<string, boolean>>({});
 
@@ -25,7 +27,9 @@ export function TaskChecklistSection({
   }
 
   if (tasks.length === 0) {
-    return <p className="text-lg text-muted">Nothing scheduled for today.</p>;
+    return (
+      <p className="text-lg text-muted">{dictionary.forYou.nothingScheduledToday}</p>
+    );
   }
 
   return (
@@ -41,7 +45,7 @@ export function TaskChecklistSection({
             {task.name}
             {task.schedule_type === "ongoing" && task.recurrence ? (
               <span className="block text-base font-normal text-muted">
-                {RECURRENCE_LABEL[task.recurrence]}
+                {dictionary.enums.recurrence[task.recurrence]}
               </span>
             ) : null}
           </CheckToggle>

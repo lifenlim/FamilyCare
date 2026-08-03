@@ -3,17 +3,22 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { AcceptInviteButton } from "@/components/invite/AcceptInviteButton";
-
-const ROLE_LABEL: Record<string, string> = {
-  editor: "Primary/Secondary Caretaker — can view and edit",
-  viewer: "Family Member — can view",
-};
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 interface InviteInfo {
   circle_id: string;
   circle_name: string;
   role: string;
   valid: boolean;
+}
+
+function roleLabel(dictionary: Dictionary, role: string): string {
+  const map: Record<string, string> = {
+    editor: dictionary.invite.caretakerDescription,
+    viewer: dictionary.invite.familyMemberDescription,
+  };
+  return map[role] ?? role;
 }
 
 export default async function InvitePage({
@@ -23,6 +28,7 @@ export default async function InvitePage({
 }) {
   const { token } = await params;
   const supabase = await createClient();
+  const dictionary = await getDictionary();
 
   const { data, error } = await supabase
     .rpc("get_invite_info", { p_token: token })
@@ -35,36 +41,30 @@ export default async function InvitePage({
   if (error || !data || !data.valid) {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-6 py-12 text-center">
-        <h1 className="text-3xl font-bold">This invite link isn&apos;t valid</h1>
-        <p className="text-lg text-muted">
-          It may have already been used, revoked, or expired. Ask the care
-          circle owner to send a new link.
-        </p>
+        <h1 className="text-3xl font-bold">{dictionary.invite.invalidTitle}</h1>
+        <p className="text-lg text-muted">{dictionary.invite.invalidBody}</p>
       </main>
     );
   }
 
-  const roleLabel = ROLE_LABEL[data.role] ?? data.role;
-
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-6 py-12 text-center">
       <h1 className="text-3xl font-bold">
-        You&apos;re invited to join {data.circle_name}
+        {dictionary.invite.invitedTo(data.circle_name)}
       </h1>
       <Card>
         <p className="text-lg">
-          Role: <span className="font-semibold">{roleLabel}</span>
+          {dictionary.invite.roleLabel}{" "}
+          <span className="font-semibold">{roleLabel(dictionary, data.role)}</span>
         </p>
       </Card>
       {user ? (
         <AcceptInviteButton token={token} />
       ) : (
         <div className="flex flex-col gap-3">
-          <p className="text-lg text-muted">
-            Sign in with your email to accept this invite.
-          </p>
+          <p className="text-lg text-muted">{dictionary.invite.signInToAccept}</p>
           <Link href={`/login?next=${encodeURIComponent(`/invite/${token}`)}`}>
-            <Button className="w-full">Sign in to accept</Button>
+            <Button className="w-full">{dictionary.invite.signInButton}</Button>
           </Link>
         </div>
       )}

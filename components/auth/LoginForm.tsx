@@ -6,19 +6,26 @@ import { CheckCircle2, Mail, Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Field, TextInput } from "@/components/ui/Field";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
-function friendlyLinkError(errorCode: string | null, description: string | null) {
+function friendlyLinkError(
+  dictionary: Dictionary,
+  errorCode: string | null,
+  description: string | null,
+) {
   if (errorCode === "otp_expired") {
-    return "That sign-in link has already been used or has expired. Please request a new one below.";
+    return dictionary.login.linkExpiredError;
   }
   if (description) {
     return decodeURIComponent(description.replace(/\+/g, " "));
   }
-  return "That sign-in link didn't work. Please request a new one below.";
+  return dictionary.login.genericError;
 }
 
 export function LoginForm() {
   const searchParams = useSearchParams();
+  const { dictionary } = useLocale();
   const next = searchParams.get("next") || "/for-you";
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -37,7 +44,7 @@ export function LoginForm() {
 
     if (hashError || queryError) {
       setStatus("error");
-      setErrorMessage(friendlyLinkError(hashError, hashDescription));
+      setErrorMessage(friendlyLinkError(dictionary, hashError, hashDescription));
       window.history.replaceState(null, "", window.location.pathname + window.location.search.replace(/[?&]error=[^&]*/, ""));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,14 +72,14 @@ export function LoginForm() {
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-success bg-white p-6 text-center text-lg">
         <CheckCircle2 className="h-10 w-10 text-success" aria-hidden="true" />
-        Check your email for a link to sign in. You can close this tab.
+        {dictionary.login.sentMessage}
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <Field label="Email address" htmlFor="email">
+      <Field label={dictionary.login.emailLabel} htmlFor="email">
         <div className="relative">
           <Mail
             className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted"
@@ -86,7 +93,7 @@ export function LoginForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={dictionary.login.emailPlaceholder}
             className="pl-12"
           />
         </div>
@@ -98,7 +105,7 @@ export function LoginForm() {
       )}
       <Button type="submit" disabled={status === "sending"}>
         <Send className="h-5 w-5" aria-hidden="true" />
-        {status === "sending" ? "Sending link..." : "Send me a sign-in link"}
+        {status === "sending" ? dictionary.login.sending : dictionary.login.sendButton}
       </Button>
     </form>
   );

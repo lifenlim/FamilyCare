@@ -8,12 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { MedicationForm } from "./MedicationForm";
 import { TopUpForm } from "./TopUpForm";
 import { deleteMedication } from "@/lib/actions/care-list";
-import {
-  daysOfSupply,
-  FREQUENCY_LABEL,
-  isRunningLow,
-  type Medication,
-} from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { daysOfSupply, isRunningLow, type Medication } from "@/lib/types";
 
 function formatBalance(n: number) {
   return Number.isInteger(n) ? n.toString() : n.toFixed(1);
@@ -26,6 +22,7 @@ export function MedicationsSection({
   medications: Medication[];
   canEdit: boolean;
 }) {
+  const { dictionary } = useLocale();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingNew, setAddingNew] = useState(false);
   const [toppingUpId, setToppingUpId] = useState<string | null>(null);
@@ -41,7 +38,7 @@ export function MedicationsSection({
       setRemovingId(null);
     } catch (err) {
       setDeleteError(
-        err instanceof Error ? err.message : "Could not remove medication.",
+        err instanceof Error ? err.message : dictionary.medications.couldNotRemove,
       );
     } finally {
       setDeletingId(null);
@@ -53,7 +50,7 @@ export function MedicationsSection({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 text-2xl font-bold">
           <Pill className="h-6 w-6 text-accent-teal" aria-hidden="true" />
-          Medications
+          {dictionary.medications.heading}
         </h2>
         {canEdit && !addingNew && (
           <Button
@@ -61,7 +58,7 @@ export function MedicationsSection({
             onClick={() => setAddingNew(true)}
           >
             <Plus className="h-5 w-5" aria-hidden="true" />
-            Add medication
+            {dictionary.medications.addMedication}
           </Button>
         )}
       </div>
@@ -74,7 +71,7 @@ export function MedicationsSection({
 
       <div className="mt-4 flex flex-col gap-3">
         {medications.length === 0 && (
-          <p className="text-lg text-muted">No medications added yet.</p>
+          <p className="text-lg text-muted">{dictionary.medications.noMedicationsYet}</p>
         )}
         {medications.map((med) => {
           const low = isRunningLow(med);
@@ -106,33 +103,34 @@ export function MedicationsSection({
                   <p className="text-xl font-semibold">{med.name}</p>
                   {med.dose_amount ? (
                     <p className="text-lg text-muted">
-                      {med.dose_amount} per dose
-                      {med.frequency ? `, ${FREQUENCY_LABEL[med.frequency]}` : ""}
+                      {dictionary.medications.perDose(
+                        String(med.dose_amount),
+                        med.frequency ? dictionary.enums.frequency[med.frequency] : "",
+                      )}
                     </p>
                   ) : (
-                    <p className="text-lg text-muted">Dosage not set</p>
+                    <p className="text-lg text-muted">{dictionary.medications.dosageNotSet}</p>
                   )}
                 </div>
                 {low && (
                   <Badge tone="warning">
                     <span className="flex items-center gap-1">
                       <AlertTriangle className="h-4 w-4" aria-hidden="true" />
-                      Running low
+                      {dictionary.medications.runningLow}
                     </span>
                   </Badge>
                 )}
               </div>
 
               <p className="text-lg">
-                Balance:{" "}
+                {dictionary.medications.balanceLabel}{" "}
                 <span className="font-semibold">
                   {formatBalance(med.current_balance)}
                 </span>
                 {days !== null && (
                   <span className="text-muted">
                     {" "}
-                    (about {Math.round(days)} day
-                    {Math.round(days) === 1 ? "" : "s"} left)
+                    ({dictionary.medications.daysLeft(Math.round(days))})
                   </span>
                 )}
               </p>
@@ -145,7 +143,7 @@ export function MedicationsSection({
                     onClick={() => setEditingId(med.id)}
                   >
                     <Pencil className="h-5 w-5" aria-hidden="true" />
-                    Edit
+                    {dictionary.common.edit}
                   </Button>
                   <Button
                     variant="secondary"
@@ -153,7 +151,7 @@ export function MedicationsSection({
                     onClick={() => setToppingUpId(isToppingUp ? null : med.id)}
                   >
                     <RefreshCw className="h-5 w-5" aria-hidden="true" />
-                    Top up
+                    {dictionary.medications.topUp}
                   </Button>
                   <Button
                     variant="danger"
@@ -164,7 +162,7 @@ export function MedicationsSection({
                     }}
                   >
                     <Trash2 className="h-5 w-5" aria-hidden="true" />
-                    Remove
+                    {dictionary.common.remove}
                   </Button>
                 </div>
               )}
@@ -180,7 +178,7 @@ export function MedicationsSection({
               {removingId === med.id && (
                 <div className="flex flex-col gap-3 rounded-lg border-2 border-danger bg-white p-3">
                   <p className="text-lg font-medium">
-                    Remove {med.name}? This can&apos;t be undone.
+                    {dictionary.medications.removeConfirm(med.name)}
                   </p>
                   {deleteError && (
                     <p role="alert" className="text-lg text-danger">
@@ -195,7 +193,9 @@ export function MedicationsSection({
                       onClick={() => handleConfirmRemove(med.id, med.name)}
                     >
                       <Trash2 className="h-5 w-5" aria-hidden="true" />
-                      {deletingId === med.id ? "Removing..." : "Yes, remove"}
+                      {deletingId === med.id
+                        ? dictionary.common.removing
+                        : dictionary.common.yesRemove}
                     </Button>
                     <Button
                       variant="secondary"
@@ -203,7 +203,7 @@ export function MedicationsSection({
                       disabled={deletingId === med.id}
                       onClick={() => setRemovingId(null)}
                     >
-                      Cancel
+                      {dictionary.common.cancel}
                     </Button>
                   </div>
                 </div>

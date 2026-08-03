@@ -7,14 +7,13 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { TaskForm } from "./TaskForm";
 import { deleteCareTask } from "@/lib/actions/care-list";
-import {
-  RECURRENCE_LABEL,
-  TASK_STATUS_LABEL,
-  type CareTask,
-} from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_TAG } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionary";
+import type { CareTask } from "@/lib/types";
 
-function formatWhen(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
+function formatWhen(iso: string, localeTag: string) {
+  return new Date(iso).toLocaleString(localeTag, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -23,12 +22,12 @@ function formatWhen(iso: string) {
   });
 }
 
-function scheduleSummary(task: CareTask) {
+function scheduleSummary(dictionary: Dictionary, localeTag: string, task: CareTask) {
   if (task.schedule_type === "ongoing" && task.recurrence) {
-    return RECURRENCE_LABEL[task.recurrence];
+    return dictionary.enums.recurrence[task.recurrence];
   }
   if (task.schedule_type === "one_time" && task.scheduled_at) {
-    return formatWhen(task.scheduled_at);
+    return formatWhen(task.scheduled_at, localeTag);
   }
   return null;
 }
@@ -40,6 +39,7 @@ export function TasksSection({
   tasks: CareTask[];
   canEdit: boolean;
 }) {
+  const { dictionary, locale } = useLocale();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingNew, setAddingNew] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export function TasksSection({
       setRemovingId(null);
     } catch (err) {
       setDeleteError(
-        err instanceof Error ? err.message : "Could not remove task.",
+        err instanceof Error ? err.message : dictionary.tasks.couldNotRemove,
       );
     } finally {
       setDeletingId(null);
@@ -66,7 +66,7 @@ export function TasksSection({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 text-2xl font-bold">
           <ClipboardList className="h-6 w-6 text-accent-purple" aria-hidden="true" />
-          Activities &amp; Tasks
+          {dictionary.tasks.heading}
         </h2>
         {canEdit && !addingNew && (
           <Button
@@ -74,7 +74,7 @@ export function TasksSection({
             onClick={() => setAddingNew(true)}
           >
             <Plus className="h-5 w-5" aria-hidden="true" />
-            Add task
+            {dictionary.tasks.addTask}
           </Button>
         )}
       </div>
@@ -87,7 +87,7 @@ export function TasksSection({
 
       <div className="mt-4 flex flex-col gap-3">
         {tasks.length === 0 && (
-          <p className="text-lg text-muted">No tasks added yet.</p>
+          <p className="text-lg text-muted">{dictionary.tasks.noTasksYet}</p>
         )}
         {tasks.map((task) => {
           if (editingId === task.id) {
@@ -100,7 +100,7 @@ export function TasksSection({
               </div>
             );
           }
-          const when = scheduleSummary(task);
+          const when = scheduleSummary(dictionary, LOCALE_TAG[locale], task);
           return (
             <div
               key={task.id}
@@ -110,7 +110,9 @@ export function TasksSection({
                 <div>
                   <p className="text-xl font-semibold">{task.name}</p>
                   <p className="text-lg text-muted">
-                    {task.schedule_type === "ongoing" ? "Recurring" : "One time"}
+                    {task.schedule_type === "ongoing"
+                      ? dictionary.tasks.recurring
+                      : dictionary.tasks.oneTime}
                     {when ? ` — ${when}` : ""}
                   </p>
                   {task.notes && (
@@ -126,7 +128,7 @@ export function TasksSection({
                         : "neutral"
                   }
                 >
-                  {TASK_STATUS_LABEL[task.status]}
+                  {dictionary.enums.taskStatus[task.status]}
                 </Badge>
               </div>
 
@@ -138,7 +140,7 @@ export function TasksSection({
                     onClick={() => setEditingId(task.id)}
                   >
                     <Pencil className="h-5 w-5" aria-hidden="true" />
-                    Edit
+                    {dictionary.common.edit}
                   </Button>
                   <Button
                     variant="danger"
@@ -149,7 +151,7 @@ export function TasksSection({
                     }}
                   >
                     <Trash2 className="h-5 w-5" aria-hidden="true" />
-                    Remove
+                    {dictionary.common.remove}
                   </Button>
                 </div>
               )}
@@ -157,7 +159,7 @@ export function TasksSection({
               {removingId === task.id && (
                 <div className="flex flex-col gap-3 rounded-lg border-2 border-danger bg-white p-3">
                   <p className="text-lg font-medium">
-                    Remove {task.name}? This can&apos;t be undone.
+                    {dictionary.tasks.removeConfirm(task.name)}
                   </p>
                   {deleteError && (
                     <p role="alert" className="text-lg text-danger">
@@ -172,7 +174,9 @@ export function TasksSection({
                       onClick={() => handleConfirmRemove(task.id, task.name)}
                     >
                       <Trash2 className="h-5 w-5" aria-hidden="true" />
-                      {deletingId === task.id ? "Removing..." : "Yes, remove"}
+                      {deletingId === task.id
+                        ? dictionary.common.removing
+                        : dictionary.common.yesRemove}
                     </Button>
                     <Button
                       variant="secondary"
@@ -180,7 +184,7 @@ export function TasksSection({
                       disabled={deletingId === task.id}
                       onClick={() => setRemovingId(null)}
                     >
-                      Cancel
+                      {dictionary.common.cancel}
                     </Button>
                   </div>
                 </div>

@@ -9,13 +9,6 @@ export interface CircleContext {
 
 export type Gender = "male" | "female" | "other" | "prefer_not_to_say";
 
-export const GENDER_LABEL: Record<Gender, string> = {
-  male: "Male",
-  female: "Female",
-  other: "Other",
-  prefer_not_to_say: "Prefer not to say",
-};
-
 export interface CircleProfile {
   id: string;
   name: string;
@@ -48,13 +41,6 @@ export type MedicationFrequency =
   | "twice_daily"
   | "thrice_daily"
   | "as_needed";
-
-export const FREQUENCY_LABEL: Record<MedicationFrequency, string> = {
-  once_daily: "Once a day",
-  twice_daily: "Twice a day",
-  thrice_daily: "Three times a day",
-  as_needed: "Only when required",
-};
 
 // "as_needed" has no fixed daily rate, so it's intentionally left out here --
 // daysOfSupply/isRunningLow treat a missing entry as "can't compute, skip".
@@ -91,12 +77,6 @@ export interface Appointment {
 
 export type AllergySeverity = "low" | "medium" | "high";
 
-export const SEVERITY_LABEL: Record<AllergySeverity, string> = {
-  low: "Low",
-  medium: "Medium",
-  high: "High",
-};
-
 export interface Allergy {
   id: string;
   circle_id: string;
@@ -115,20 +95,6 @@ export type TaskRecurrence =
   | "monthly"
   | "quarterly";
 export type TaskStatus = "active" | "completed" | "cancelled";
-
-export const RECURRENCE_LABEL: Record<TaskRecurrence, string> = {
-  daily: "Daily",
-  weekly: "Weekly",
-  biweekly: "Every two weeks",
-  monthly: "Monthly",
-  quarterly: "Every three months",
-};
-
-export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
-  active: "Active",
-  completed: "Completed",
-  cancelled: "Cancelled",
-};
 
 export interface CareTask {
   id: string;

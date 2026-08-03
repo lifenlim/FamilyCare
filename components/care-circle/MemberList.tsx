@@ -5,13 +5,8 @@ import { Clock, ShieldOff, User, UserX } from "lucide-react";
 import { revokeInvite, revokeMember } from "@/lib/actions/circle";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { CircleInvite, CircleMember } from "@/lib/types";
-
-const ROLE_LABEL: Record<string, string> = {
-  owner: "Account Owner",
-  editor: "Primary/Secondary Caretaker",
-  viewer: "Family Member",
-};
 
 export function MemberList({
   owner,
@@ -24,8 +19,15 @@ export function MemberList({
   invites: CircleInvite[];
   isOwner: boolean;
 }) {
+  const { dictionary } = useLocale();
   const [isPending, startTransition] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
+
+  const roleLabel: Record<string, string> = {
+    owner: dictionary.members.roleAccountOwner,
+    editor: dictionary.members.roleCaretaker,
+    viewer: dictionary.nav.roleFamilyMember,
+  };
 
   function handleRevokeMember(id: string) {
     setPendingId(id);
@@ -50,9 +52,9 @@ export function MemberList({
           <User className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
           <div className="flex flex-col gap-1">
             <p className="text-lg font-semibold">
-              {owner.email ?? "Account owner"}
+              {owner.email ?? dictionary.members.accountOwner}
             </p>
-            <Badge tone="primary">{ROLE_LABEL.owner}</Badge>
+            <Badge tone="primary">{roleLabel.owner}</Badge>
           </div>
         </div>
       </div>
@@ -66,9 +68,9 @@ export function MemberList({
             <User className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
             <div className="flex flex-col gap-1">
               <p className="text-lg font-semibold">
-                {m.email ?? "Circle member"}
+                {m.email ?? dictionary.members.circleMember}
               </p>
-              <Badge>{ROLE_LABEL[m.role]}</Badge>
+              <Badge>{roleLabel[m.role]}</Badge>
             </div>
           </div>
           {isOwner && (
@@ -80,24 +82,22 @@ export function MemberList({
             >
               <UserX className="h-5 w-5" aria-hidden="true" />
               {isPending && pendingId === m.id
-                ? "Revoking..."
-                : "Revoke access"}
+                ? dictionary.members.revoking
+                : dictionary.members.revokeAccess}
             </Button>
           )}
         </div>
       ))}
 
       {members.length === 0 && (
-        <p className="text-lg text-muted">
-          No one else has joined this circle yet.
-        </p>
+        <p className="text-lg text-muted">{dictionary.members.noOneJoinedYet}</p>
       )}
 
       {isOwner && invites.length > 0 && (
         <div className="mt-4">
           <h3 className="flex items-center gap-2 text-xl font-bold">
             <Clock className="h-5 w-5 text-primary" aria-hidden="true" />
-            Pending invites
+            {dictionary.members.pendingInvites}
           </h3>
           <div className="mt-2 flex flex-col gap-3">
             {invites.map((inv) => (
@@ -106,8 +106,8 @@ export function MemberList({
                 className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-2 border-dashed border-border px-4 py-3"
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-lg">Waiting for someone to accept</p>
-                  <Badge tone="warning">{ROLE_LABEL[inv.role]}</Badge>
+                  <p className="text-lg">{dictionary.members.waitingForAccept}</p>
+                  <Badge tone="warning">{roleLabel[inv.role]}</Badge>
                 </div>
                 <Button
                   variant="danger"
@@ -117,8 +117,8 @@ export function MemberList({
                 >
                   <ShieldOff className="h-5 w-5" aria-hidden="true" />
                   {isPending && pendingId === inv.id
-                    ? "Cancelling..."
-                    : "Cancel invite"}
+                    ? dictionary.members.cancelling
+                    : dictionary.members.cancelInvite}
                 </Button>
               </div>
             ))}

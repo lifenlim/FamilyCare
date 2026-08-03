@@ -9,14 +9,16 @@ import {
 import { Card } from "@/components/ui/Card";
 import { InviteGenerator } from "@/components/care-circle/InviteGenerator";
 import { MemberList } from "@/components/care-circle/MemberList";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 export default async function MembersPage() {
   const supabase = await createClient();
   const ctx = await getCircleContext(supabase);
-  const [owner, members, invites] = await Promise.all([
+  const [owner, members, invites, dictionary] = await Promise.all([
     getCircleOwner(supabase, ctx.circleId),
     getMembers(supabase, ctx.circleId),
     getPendingInvites(supabase, ctx.circleId),
+    getDictionary(),
   ]);
 
   return (
@@ -24,7 +26,7 @@ export default async function MembersPage() {
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
           <Users className="h-6 w-6 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
-          Members
+          {dictionary.members.heading}
         </h1>
         <p className="mt-1 text-base text-muted sm:text-lg">{ctx.circleName}</p>
       </div>
@@ -33,11 +35,10 @@ export default async function MembersPage() {
         <Card>
           <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
             <UserPlus className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
-            Invite someone
+            {dictionary.members.inviteSomeone}
           </h2>
           <p className="mt-1 text-base text-muted sm:text-lg">
-            Generate a link and share it with them. They&apos;ll sign in with
-            their own email — no separate account setup needed.
+            {dictionary.members.inviteBlurb}
           </p>
           <div className="mt-4">
             <InviteGenerator />
@@ -48,7 +49,7 @@ export default async function MembersPage() {
       <Card>
         <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
           <Users className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
-          People in this circle
+          {dictionary.members.peopleInCircle}
         </h2>
         <MemberList
           owner={owner}

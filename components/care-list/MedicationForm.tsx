@@ -5,7 +5,8 @@ import { Check, X } from "lucide-react";
 import { saveMedication } from "@/lib/actions/care-list";
 import { Button } from "@/components/ui/Button";
 import { Field, Select, TextArea, TextInput } from "@/components/ui/Field";
-import { FREQUENCY_LABEL, type Medication } from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { Medication } from "@/lib/types";
 
 export function MedicationForm({
   medication,
@@ -14,6 +15,7 @@ export function MedicationForm({
   medication?: Medication;
   onDone: () => void;
 }) {
+  const { dictionary } = useLocale();
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -27,7 +29,7 @@ export function MedicationForm({
     } catch (err) {
       setStatus("error");
       setMessage(
-        err instanceof Error ? err.message : "Could not save medication.",
+        err instanceof Error ? err.message : dictionary.medications.couldNotSave,
       );
     }
   }
@@ -35,7 +37,7 @@ export function MedicationForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {medication && <input type="hidden" name="id" value={medication.id} />}
-      <Field label="Medication name" htmlFor="med-name">
+      <Field label={dictionary.medications.nameLabel} htmlFor="med-name">
         <TextInput
           id="med-name"
           name="name"
@@ -43,7 +45,7 @@ export function MedicationForm({
           defaultValue={medication?.name}
         />
       </Field>
-      <Field label="Per dosage (amount per dose)" htmlFor="med-dosage">
+      <Field label={dictionary.medications.dosageLabel} htmlFor="med-dosage">
         <TextInput
           id="med-dosage"
           name="dose_amount"
@@ -52,10 +54,10 @@ export function MedicationForm({
           step="any"
           required
           defaultValue={medication?.dose_amount ?? ""}
-          placeholder="e.g. 2"
+          placeholder={dictionary.medications.dosagePlaceholder}
         />
       </Field>
-      <Field label="How often is it taken?" htmlFor="med-frequency">
+      <Field label={dictionary.medications.frequencyLabel} htmlFor="med-frequency">
         <Select
           id="med-frequency"
           name="frequency"
@@ -63,9 +65,9 @@ export function MedicationForm({
           defaultValue={medication?.frequency ?? ""}
         >
           <option value="" disabled>
-            Select how often
+            {dictionary.medications.selectFrequency}
           </option>
-          {Object.entries(FREQUENCY_LABEL).map(([value, label]) => (
+          {Object.entries(dictionary.enums.frequency).map(([value, label]) => (
             <option key={value} value={value}>
               {label}
             </option>
@@ -73,7 +75,7 @@ export function MedicationForm({
         </Select>
       </Field>
       {!medication && (
-        <Field label="Current medication balance" htmlFor="med-balance">
+        <Field label={dictionary.medications.currentBalanceLabel} htmlFor="med-balance">
           <TextInput
             id="med-balance"
             name="initial_balance"
@@ -85,7 +87,7 @@ export function MedicationForm({
           />
         </Field>
       )}
-      <Field label="Notes (optional)" htmlFor="med-notes">
+      <Field label={dictionary.common.notesLabel} htmlFor="med-notes">
         <TextArea
           id="med-notes"
           name="notes"
@@ -102,11 +104,11 @@ export function MedicationForm({
       <div className="flex flex-wrap gap-3">
         <Button type="submit" disabled={status === "saving"}>
           <Check className="h-5 w-5" aria-hidden="true" />
-          {status === "saving" ? "Saving..." : "Save"}
+          {status === "saving" ? dictionary.common.saving : dictionary.common.save}
         </Button>
         <Button type="button" variant="secondary" onClick={onDone}>
           <X className="h-5 w-5" aria-hidden="true" />
-          Cancel
+          {dictionary.common.cancel}
         </Button>
       </div>
     </form>

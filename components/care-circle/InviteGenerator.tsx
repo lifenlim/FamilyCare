@@ -4,27 +4,29 @@ import { useState } from "react";
 import { Check, Copy, UserPlus } from "lucide-react";
 import { createInvite } from "@/lib/actions/circle";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { MemberRole } from "@/lib/types";
 
-const ROLE_OPTIONS: { value: MemberRole; label: string; hint: string }[] = [
-  {
-    value: "viewer",
-    label: "Family Member",
-    hint: "Can view the care list only",
-  },
-  {
-    value: "editor",
-    label: "Primary/Secondary Caretaker",
-    hint: "Can view and edit the care list",
-  },
-];
-
 export function InviteGenerator() {
+  const { dictionary } = useLocale();
   const [role, setRole] = useState<MemberRole>("viewer");
   const [link, setLink] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
   const [copied, setCopied] = useState(false);
+
+  const roleOptions: { value: MemberRole; label: string; hint: string }[] = [
+    {
+      value: "viewer",
+      label: dictionary.nav.roleFamilyMember,
+      hint: dictionary.members.familyMemberHint,
+    },
+    {
+      value: "editor",
+      label: dictionary.members.roleCaretaker,
+      hint: dictionary.members.careTakerHint,
+    },
+  ];
 
   async function handleGenerate() {
     setStatus("loading");
@@ -37,7 +39,7 @@ export function InviteGenerator() {
     } catch (err) {
       setStatus("error");
       setMessage(
-        err instanceof Error ? err.message : "Could not create invite.",
+        err instanceof Error ? err.message : dictionary.members.couldNotCreateInvite,
       );
     }
   }
@@ -51,8 +53,8 @@ export function InviteGenerator() {
   return (
     <div className="flex flex-col gap-4">
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-lg font-medium">Role for this person</legend>
-        {ROLE_OPTIONS.map((opt) => (
+        <legend className="text-lg font-medium">{dictionary.members.roleForPerson}</legend>
+        {roleOptions.map((opt) => (
           <label
             key={opt.value}
             className={`flex cursor-pointer flex-col rounded-lg border-2 px-4 py-3 ${
@@ -83,7 +85,7 @@ export function InviteGenerator() {
         className="w-full sm:w-auto"
       >
         <UserPlus className="h-5 w-5" aria-hidden="true" />
-        {status === "loading" ? "Generating..." : "Generate invite link"}
+        {status === "loading" ? dictionary.members.generating : dictionary.members.generateLink}
       </Button>
 
       {status === "error" && (
@@ -94,7 +96,7 @@ export function InviteGenerator() {
 
       {link && (
         <div className="flex flex-col gap-2 rounded-lg border-2 border-success bg-white p-4">
-          <p className="text-base text-muted">Share this link:</p>
+          <p className="text-base text-muted">{dictionary.members.shareThisLink}</p>
           <p className="break-all text-lg font-medium">{link}</p>
           <Button
             variant="secondary"
@@ -106,7 +108,7 @@ export function InviteGenerator() {
             ) : (
               <Copy className="h-5 w-5" aria-hidden="true" />
             )}
-            {copied ? "Copied!" : "Copy link"}
+            {copied ? dictionary.members.copied : dictionary.members.copyLink}
           </Button>
         </div>
       )}

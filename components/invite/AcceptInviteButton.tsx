@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { UserCheck } from "lucide-react";
 import { acceptInvite } from "@/lib/actions/circle";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export function AcceptInviteButton({ token }: { token: string }) {
   const router = useRouter();
+  const { dictionary } = useLocale();
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -19,7 +21,9 @@ export function AcceptInviteButton({ token }: { token: string }) {
       router.refresh();
     } catch (err) {
       setStatus("error");
-      setMessage(err instanceof Error ? err.message : "Something went wrong.");
+      setMessage(
+        err instanceof Error ? err.message : dictionary.invite.somethingWentWrong,
+      );
     }
   }
 
@@ -36,7 +40,7 @@ export function AcceptInviteButton({ token }: { token: string }) {
         className="w-full"
       >
         <UserCheck className="h-5 w-5" aria-hidden="true" />
-        {status === "loading" ? "Joining..." : "Accept and join"}
+        {status === "loading" ? dictionary.invite.joining : dictionary.invite.acceptAndJoin}
       </Button>
     </div>
   );

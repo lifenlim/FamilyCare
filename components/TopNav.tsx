@@ -5,26 +5,22 @@ import { usePathname, useRouter } from "next/navigation";
 import { History, Home, LogOut, UserCircle, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { CircleRole } from "@/lib/types";
 
-const TABS = [
-  { href: "/for-you", label: "Caring Hub", icon: Home, roles: null },
-  { href: "/profile", label: "Profile", icon: UserCircle, roles: null },
-  { href: "/members", label: "Members", icon: Users, roles: null },
+const TAB_CONFIG = [
+  { href: "/for-you", labelKey: "caringHub", icon: Home, roles: null },
+  { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
+  { href: "/members", labelKey: "members", icon: Users, roles: null },
   {
     href: "/activity",
-    label: "Activity",
+    labelKey: "activity",
     icon: History,
     roles: ["owner", "editor"] as CircleRole[],
   },
-];
-
-const ROLE_BADGE_LABEL: Record<CircleRole, string> = {
-  owner: "Owner",
-  editor: "Care Taker",
-  viewer: "Family Member",
-};
+] as const;
 
 export function TopNav({
   email,
@@ -39,6 +35,13 @@ export function TopNav({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { dictionary } = useLocale();
+
+  const roleBadgeLabel: Record<CircleRole, string> = {
+    owner: dictionary.nav.roleOwner,
+    editor: dictionary.nav.roleCareTaker,
+    viewer: dictionary.nav.roleFamilyMember,
+  };
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -47,7 +50,9 @@ export function TopNav({
     router.refresh();
   }
 
-  const tabs = TABS.filter((tab) => !tab.roles || tab.roles.includes(role));
+  const tabs = TAB_CONFIG.filter(
+    (tab) => !tab.roles || tab.roles.includes(role),
+  );
 
   return (
     <header className="border-b-2 border-border bg-white">
@@ -78,8 +83,9 @@ export function TopNav({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+          <LanguageSwitcher />
           <span className="rounded-full border-2 border-primary bg-primary/10 px-2 py-1 text-sm font-semibold text-primary whitespace-nowrap sm:px-3 sm:text-base">
-            {ROLE_BADGE_LABEL[role]}
+            {roleBadgeLabel[role]}
           </span>
           {email && (
             <span className="hidden text-base text-muted lg:inline">
@@ -92,7 +98,7 @@ export function TopNav({
             className="min-h-0 px-3 py-2 text-sm sm:px-4 sm:text-base"
           >
             <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-            <span className="hidden sm:inline">Sign out</span>
+            <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
           </Button>
         </div>
       </div>
@@ -111,7 +117,7 @@ export function TopNav({
               }`}
             >
               <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              <span className="truncate">{tab.label}</span>
+              <span className="truncate">{dictionary.nav[tab.labelKey]}</span>
             </Link>
           );
         })}

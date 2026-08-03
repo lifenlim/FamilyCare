@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { toggleChecklist } from "@/lib/actions/care-list";
 import { CheckToggle } from "@/components/ui/CheckToggle";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { DoseChecklistEntry, Medication } from "@/lib/types";
 
 export function ChecklistSection({
@@ -12,6 +13,7 @@ export function ChecklistSection({
   medications: Medication[];
   checklist: DoseChecklistEntry[];
 }) {
+  const { dictionary } = useLocale();
   const [, startTransition] = useTransition();
   const [optimistic, setOptimistic] = useState<Record<string, boolean>>({});
 
@@ -25,7 +27,9 @@ export function ChecklistSection({
   }
 
   if (medications.length === 0) {
-    return <p className="text-lg text-muted">No medications added yet.</p>;
+    return (
+      <p className="text-lg text-muted">{dictionary.forYou.noMedicationsYet}</p>
+    );
   }
 
   return (

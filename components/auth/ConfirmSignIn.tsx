@@ -6,9 +6,11 @@ import { HeartHandshake } from "lucide-react";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/Button";
 import { confirmSignIn } from "@/lib/actions/auth";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export function ConfirmSignIn() {
   const searchParams = useSearchParams();
+  const { dictionary } = useLocale();
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const code = searchParams.get("code");
@@ -29,7 +31,7 @@ export function ConfirmSignIn() {
       // redirect() throws internally to signal navigation -- let that
       // propagate; only a real failure (bad/expired link) reaches here.
       unstable_rethrow(err);
-      setError("That sign-in link didn't work. Please request a new one.");
+      setError(dictionary.authConfirm.failed);
       setLoading(false);
     }
   }
@@ -38,10 +40,10 @@ export function ConfirmSignIn() {
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-6 py-12 text-center">
       <HeartHandshake className="h-12 w-12 text-primary" aria-hidden="true" />
       <div>
-        <h1 className="text-2xl font-bold text-primary">Finish signing in</h1>
-        <p className="mt-2 text-lg text-muted">
-          Tap the button below to complete signing in to FamilyCare.
-        </p>
+        <h1 className="text-2xl font-bold text-primary">
+          {dictionary.authConfirm.heading}
+        </h1>
+        <p className="mt-2 text-lg text-muted">{dictionary.authConfirm.subtitle}</p>
       </div>
       {error && (
         <p role="alert" className="text-lg text-danger">
@@ -50,11 +52,11 @@ export function ConfirmSignIn() {
       )}
       {!params && (
         <p role="alert" className="text-lg text-danger">
-          This link is missing its sign-in details. Please request a new one.
+          {dictionary.authConfirm.missingDetails}
         </p>
       )}
       <Button onClick={handleClick} disabled={loading || !params}>
-        {loading ? "Signing in..." : "Finish signing in"}
+        {loading ? dictionary.authConfirm.signingIn : dictionary.authConfirm.button}
       </Button>
     </main>
   );

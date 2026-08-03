@@ -7,11 +7,13 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Field, Select, TextArea, TextInput } from "@/components/ui/Field";
 import { InfoTile } from "@/components/ui/InfoTile";
-import { calculateAge, GENDER_LABEL, type CircleProfile } from "@/lib/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_TAG } from "@/lib/i18n/config";
+import { calculateAge, type CircleProfile } from "@/lib/types";
 
-function formatDob(iso: string) {
+function formatDob(iso: string, localeTag: string) {
   const d = new Date(iso);
-  return d.toLocaleDateString(undefined, {
+  return d.toLocaleDateString(localeTag, {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -25,6 +27,7 @@ export function PatientProfileCard({
   profile: CircleProfile;
   canEdit: boolean;
 }) {
+  const { dictionary, locale } = useLocale();
   const [editing, setEditing] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -39,19 +42,21 @@ export function PatientProfileCard({
       setStatus("idle");
     } catch (err) {
       setStatus("error");
-      setMessage(err instanceof Error ? err.message : "Could not save profile.");
+      setMessage(err instanceof Error ? err.message : dictionary.profile.couldNotSave);
     }
   }
 
   const dobAge = profile.date_of_birth
-    ? `${formatDob(profile.date_of_birth)} · ${calculateAge(profile.date_of_birth)} yrs`
+    ? `${formatDob(profile.date_of_birth, LOCALE_TAG[locale])} · ${calculateAge(profile.date_of_birth)} yrs`
     : "";
 
   return (
     <Card>
       {!editing && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-xl font-bold sm:text-2xl">Recipient profile</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">
+            {dictionary.profile.recipientProfile}
+          </h2>
           {canEdit && (
             <Button
               variant="secondary"
@@ -59,7 +64,7 @@ export function PatientProfileCard({
               onClick={() => setEditing(true)}
             >
               <Pencil className="h-5 w-5" aria-hidden="true" />
-              Edit
+              {dictionary.common.edit}
             </Button>
           )}
         </div>
@@ -67,14 +72,14 @@ export function PatientProfileCard({
 
       {editing ? (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Field label="Full name" htmlFor="patient-name">
+          <Field label={dictionary.profile.fullNameLabel} htmlFor="patient-name">
             <TextInput
               id="patient-name"
               name="patient_name"
               defaultValue={profile.patient_name ?? ""}
             />
           </Field>
-          <Field label="Date of birth" htmlFor="patient-dob">
+          <Field label={dictionary.profile.dobLabel} htmlFor="patient-dob">
             <TextInput
               id="patient-dob"
               name="date_of_birth"
@@ -82,28 +87,31 @@ export function PatientProfileCard({
               defaultValue={profile.date_of_birth ?? ""}
             />
           </Field>
-          <Field label="Gender" htmlFor="patient-gender">
+          <Field label={dictionary.profile.genderLabel} htmlFor="patient-gender">
             <Select
               id="patient-gender"
               name="gender"
               defaultValue={profile.gender ?? ""}
             >
-              <option value="">Not set</option>
-              {Object.entries(GENDER_LABEL).map(([value, label]) => (
+              <option value="">{dictionary.common.notSet}</option>
+              {Object.entries(dictionary.enums.gender).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
               ))}
             </Select>
           </Field>
-          <Field label="Preferred language" htmlFor="patient-language">
+          <Field
+            label={dictionary.profile.preferredLanguageLabel}
+            htmlFor="patient-language"
+          >
             <TextInput
               id="patient-language"
               name="preferred_language"
               defaultValue={profile.preferred_language ?? ""}
             />
           </Field>
-          <Field label="Notes" htmlFor="patient-notes">
+          <Field label={dictionary.profile.notesLabel} htmlFor="patient-notes">
             <TextArea
               id="patient-notes"
               name="profile_notes"
@@ -120,11 +128,11 @@ export function PatientProfileCard({
           <div className="flex flex-wrap gap-3">
             <Button type="submit" disabled={status === "saving"}>
               <Check className="h-5 w-5" aria-hidden="true" />
-              {status === "saving" ? "Saving..." : "Save"}
+              {status === "saving" ? dictionary.common.saving : dictionary.common.save}
             </Button>
             <Button type="button" variant="secondary" onClick={() => setEditing(false)}>
               <X className="h-5 w-5" aria-hidden="true" />
-              Cancel
+              {dictionary.common.cancel}
             </Button>
           </div>
         </form>
@@ -139,7 +147,7 @@ export function PatientProfileCard({
             </span>
             <div>
               <p className="text-lg font-bold sm:text-xl">
-                {profile.patient_name || "Not set"}
+                {profile.patient_name || dictionary.common.notSet}
               </p>
               {dobAge && <p className="text-base text-muted">{dobAge}</p>}
             </div>
@@ -147,19 +155,19 @@ export function PatientProfileCard({
 
           <InfoTile
             icon={UsersRound}
-            label="Gender"
-            value={profile.gender ? GENDER_LABEL[profile.gender] : ""}
+            label={dictionary.profile.genderLabel}
+            value={profile.gender ? dictionary.enums.gender[profile.gender] : ""}
             tone="purple"
           />
           <InfoTile
             icon={Languages}
-            label="Preferred language"
+            label={dictionary.profile.preferredLanguageLabel}
             value={profile.preferred_language ?? ""}
             tone="blue"
           />
           <InfoTile
             icon={FileText}
-            label="Notes"
+            label={dictionary.profile.notesLabel}
             value={profile.profile_notes ?? ""}
             tone="gold"
           />

@@ -1,7 +1,11 @@
+"use client";
+
 import { CalendarDays, ClipboardList, Pill } from "lucide-react";
 import { GlanceCard } from "@/components/ui/GlanceCard";
 import { ChecklistSection } from "./ChecklistSection";
 import { TaskChecklistSection } from "./TaskChecklistSection";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_TAG } from "@/lib/i18n/config";
 import {
   isTaskDueToday,
   type Appointment,
@@ -11,8 +15,8 @@ import {
   type TaskChecklistEntry,
 } from "@/lib/types";
 
-function formatAppointmentDate(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
+function formatAppointmentDate(iso: string, localeTag: string) {
+  return new Date(iso).toLocaleString(localeTag, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -34,6 +38,7 @@ export function SummaryCard({
   checklist: DoseChecklistEntry[];
   taskChecklist: TaskChecklistEntry[];
 }) {
+  const { dictionary, locale } = useLocale();
   const todaysTasks = tasks.filter(isTaskDueToday);
   const nextAppointment = appointments
     .filter(
@@ -46,27 +51,39 @@ export function SummaryCard({
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row">
-      <GlanceCard icon={CalendarDays} title="Upcoming appointment" tone="blue">
+      <GlanceCard
+        icon={CalendarDays}
+        title={dictionary.forYou.upcomingAppointment}
+        tone="blue"
+      >
         {nextAppointment ? (
           <div>
             <p className="text-lg font-semibold">{nextAppointment.title}</p>
             <p className="text-lg text-muted">
-              {formatAppointmentDate(nextAppointment.appointment_at)}
+              {formatAppointmentDate(nextAppointment.appointment_at, LOCALE_TAG[locale])}
             </p>
             {nextAppointment.location && (
               <p className="text-lg text-muted">{nextAppointment.location}</p>
             )}
           </div>
         ) : (
-          <p className="text-lg text-muted">Nothing scheduled.</p>
+          <p className="text-lg text-muted">{dictionary.forYou.nothingScheduled}</p>
         )}
       </GlanceCard>
 
-      <GlanceCard icon={Pill} title="Today's medications" tone="teal">
+      <GlanceCard
+        icon={Pill}
+        title={dictionary.forYou.todaysMedications}
+        tone="teal"
+      >
         <ChecklistSection medications={medications} checklist={checklist} />
       </GlanceCard>
 
-      <GlanceCard icon={ClipboardList} title="Activities & Tasks" tone="purple">
+      <GlanceCard
+        icon={ClipboardList}
+        title={dictionary.forYou.activitiesAndTasks}
+        tone="purple"
+      >
         <TaskChecklistSection tasks={todaysTasks} checklist={taskChecklist} />
       </GlanceCard>
     </div>
