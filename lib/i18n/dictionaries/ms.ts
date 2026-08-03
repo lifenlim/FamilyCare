@@ -60,6 +60,9 @@ const ms: Dictionary = {
     resendCode: "Hantar kod semula",
     changePhoneNumber: "Guna nombor lain",
     invalidCode: "Kod itu tidak berfungsi. Sila semak dan cuba lagi.",
+    comingSoon: "Akan datang",
+    whatsappComingSoonMessage:
+      "Log masuk melalui WhatsApp akan datang tidak lama lagi. Sila gunakan E-mel buat masa ini.",
   },
   authConfirm: {
     heading: "Selesaikan log masuk",

@@ -54,6 +54,8 @@ export interface Dictionary {
     resendCode: string;
     changePhoneNumber: string;
     invalidCode: string;
+    comingSoon: string;
+    whatsappComingSoonMessage: string;
   };
   authConfirm: {
     heading: string;

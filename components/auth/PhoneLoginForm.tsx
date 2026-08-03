@@ -8,6 +8,15 @@ import { Button } from "@/components/ui/Button";
 import { Field, TextInput } from "@/components/ui/Field";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
+// Strips spaces/dashes/parentheses so "+65 9099 6245" and "+6590996245"
+// resolve to the same value -- matters both for matching Supabase's test-OTP
+// bypass entries and for reliable delivery via a real provider.
+function normalizePhone(raw: string): string {
+  const trimmed = raw.trim();
+  const digits = trimmed.replace(/[^\d]/g, "");
+  return trimmed.startsWith("+") ? `+${digits}` : digits;
+}
+
 export function PhoneLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,7 +35,7 @@ export function PhoneLoginForm() {
     setErrorMessage("");
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
-      phone,
+      phone: normalizePhone(phone),
       options: { channel: "whatsapp" },
     });
     if (error) {
@@ -44,7 +53,7 @@ export function PhoneLoginForm() {
     setErrorMessage("");
     const supabase = createClient();
     const { error } = await supabase.auth.verifyOtp({
-      phone,
+      phone: normalizePhone(phone),
       token: code,
       type: "sms",
     });

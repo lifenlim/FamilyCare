@@ -56,6 +56,8 @@ const zh: Dictionary = {
     resendCode: "重新发送验证码",
     changePhoneNumber: "更换手机号码",
     invalidCode: "验证码无效，请检查后重试。",
+    comingSoon: "即将推出",
+    whatsappComingSoonMessage: "WhatsApp 登录即将推出，请暂时使用邮箱登录。",
   },
   authConfirm: {
     heading: "完成登录",

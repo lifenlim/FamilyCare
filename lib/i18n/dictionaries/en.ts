@@ -57,6 +57,9 @@ const en: Dictionary = {
     resendCode: "Send the code again",
     changePhoneNumber: "Use a different number",
     invalidCode: "That code didn't work. Please check it and try again.",
+    comingSoon: "Coming soon",
+    whatsappComingSoonMessage:
+      "WhatsApp sign-in is coming soon. Please use Email to sign in for now.",
   },
   authConfirm: {
     heading: "Finish signing in",
