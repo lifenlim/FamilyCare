@@ -198,3 +198,5 @@ export function isRunningLow(med: Medication): boolean {
   const days = daysOfSupply(med);
   return days !== null && days <= 3;
 }
+
+export type FeedbackCategory = "bug" | "idea" | "compliment" | "other";

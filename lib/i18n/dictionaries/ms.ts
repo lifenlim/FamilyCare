@@ -18,6 +18,7 @@ const ms: Dictionary = {
     caringHub: "Pusat Penjagaan",
     profile: "Profil",
     members: "Ahli",
+    feedback: "Maklum Balas",
     activity: "Aktiviti",
     signOut: "Log keluar",
     roleOwner: "Pemilik",
@@ -219,6 +220,20 @@ const ms: Dictionary = {
     caretakerDescription: "Penjaga Utama/Kedua — boleh melihat dan menyunting",
     familyMemberDescription: "Ahli Keluarga — hanya boleh melihat",
   },
+  feedback: {
+    heading: "Maklum Balas",
+    intro: "Kami ingin tahu pendapat anda — laporkan pepijat, kongsi idea, atau sekadar bertegur sapa.",
+    categoryLabel: "Kategori (pilihan)",
+    categoryPlaceholder: "Pilih kategori",
+    messageLabel: "Mesej anda",
+    messagePlaceholder: "Kongsikan apa yang anda fikirkan...",
+    submit: "Hantar maklum balas",
+    submitting: "Menghantar...",
+    couldNotSubmit: "Tidak dapat menghantar maklum balas anda. Sila cuba lagi.",
+    thankYouTitle: "Terima kasih!",
+    thankYouBody: "Maklum balas anda telah dihantar. Kami menghargai masa anda.",
+    sendAnother: "Hantar satu lagi",
+  },
   enums: {
     gender: {
       male: "Lelaki",
@@ -243,6 +258,12 @@ const ms: Dictionary = {
       biweekly: "Setiap dua minggu",
       monthly: "Setiap bulan",
       quarterly: "Setiap tiga bulan",
+    },
+    feedbackCategory: {
+      bug: "Pepijat",
+      idea: "Idea",
+      compliment: "Pujian",
+      other: "Lain-lain",
     },
     taskStatus: {
       active: "Aktif",

@@ -135,6 +135,16 @@ create table if not exists public.activity_log (
   created_at timestamptz not null default now()
 );
 
+-- Free-text app feedback, not scoped to any circle. No select policy/grant
+-- below -- there's no in-app list/admin view; review it in Supabase directly.
+create table if not exists public.feedback (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  category text check (category in ('bug', 'idea', 'compliment', 'other')),
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists idx_members_circle on public.care_circle_members(circle_id);
 create index if not exists idx_invites_circle on public.care_circle_invites(circle_id);
 create index if not exists idx_medications_circle on public.medications(circle_id);
@@ -144,6 +154,7 @@ create index if not exists idx_care_tasks_circle on public.care_tasks(circle_id)
 create index if not exists idx_checklist_medication on public.dose_checklist(medication_id);
 create index if not exists idx_task_checklist_task on public.task_checklist(task_id);
 create index if not exists idx_activity_circle on public.activity_log(circle_id, created_at desc);
+create index if not exists idx_feedback_user on public.feedback(user_id);
 
 -- ============================================================
 -- updated_at trigger
@@ -242,6 +253,7 @@ alter table public.care_tasks enable row level security;
 alter table public.dose_checklist enable row level security;
 alter table public.task_checklist enable row level security;
 alter table public.activity_log enable row level security;
+alter table public.feedback enable row level security;
 
 -- RLS policies restrict rows, but Postgres also requires base table-level
 -- privileges before it evaluates them at all.
@@ -258,6 +270,9 @@ grant select, insert, update, delete on
   public.task_checklist,
   public.activity_log
 to authenticated;
+
+-- feedback: insert-only, no select grant -- there's no in-app read path
+grant insert on public.feedback to authenticated;
 
 -- profiles (lets circle-mates see each other's email for member lists / activity log)
 create policy "profile visible to circle-mates" on public.profiles
@@ -382,6 +397,10 @@ create policy "activity readable by owner+editor" on public.activity_log
   for select using (public.user_circle_role(circle_id) in ('owner', 'editor'));
 create policy "activity insertable by self" on public.activity_log
   for insert with check (user_id = auth.uid() and public.user_circle_role(circle_id) is not null);
+
+-- feedback: insert-only, no select policy -- reviewed directly in Supabase
+create policy "feedback insertable by self" on public.feedback
+  for insert with check (user_id = auth.uid());
 
 -- ============================================================
 -- RPCs: circle bootstrap + invite accept flow

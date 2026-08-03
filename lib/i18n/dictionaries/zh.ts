@@ -18,6 +18,7 @@ const zh: Dictionary = {
     caringHub: "关怀中心",
     profile: "个人资料",
     members: "成员",
+    feedback: "反馈",
     activity: "活动记录",
     signOut: "退出登录",
     roleOwner: "拥有者",
@@ -212,6 +213,20 @@ const zh: Dictionary = {
     caretakerDescription: "主要/次要照护者 —— 可查看并编辑",
     familyMemberDescription: "家庭成员 —— 仅可查看",
   },
+  feedback: {
+    heading: "反馈",
+    intro: "欢迎告诉我们您的想法 —— 报告问题、分享建议，或只是打个招呼。",
+    categoryLabel: "类别（选填）",
+    categoryPlaceholder: "请选择类别",
+    messageLabel: "您的留言",
+    messagePlaceholder: "请输入您想说的内容……",
+    submit: "发送反馈",
+    submitting: "发送中...",
+    couldNotSubmit: "无法发送反馈，请重试。",
+    thankYouTitle: "谢谢您！",
+    thankYouBody: "您的反馈已发送，感谢您抽出时间。",
+    sendAnother: "再发送一条",
+  },
   enums: {
     gender: {
       male: "男",
@@ -236,6 +251,12 @@ const zh: Dictionary = {
       biweekly: "每两周",
       monthly: "每月",
       quarterly: "每三个月",
+    },
+    feedbackCategory: {
+      bug: "问题反馈",
+      idea: "建议",
+      compliment: "表扬",
+      other: "其他",
     },
     taskStatus: {
       active: "进行中",

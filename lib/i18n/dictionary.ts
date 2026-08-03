@@ -16,6 +16,7 @@ export interface Dictionary {
     caringHub: string;
     profile: string;
     members: string;
+    feedback: string;
     activity: string;
     signOut: string;
     roleOwner: string;
@@ -208,6 +209,20 @@ export interface Dictionary {
     caretakerDescription: string;
     familyMemberDescription: string;
   };
+  feedback: {
+    heading: string;
+    intro: string;
+    categoryLabel: string;
+    categoryPlaceholder: string;
+    messageLabel: string;
+    messagePlaceholder: string;
+    submit: string;
+    submitting: string;
+    couldNotSubmit: string;
+    thankYouTitle: string;
+    thankYouBody: string;
+    sendAnother: string;
+  };
   enums: {
     gender: {
       male: string;
@@ -232,6 +247,12 @@ export interface Dictionary {
       biweekly: string;
       monthly: string;
       quarterly: string;
+    };
+    feedbackCategory: {
+      bug: string;
+      idea: string;
+      compliment: string;
+      other: string;
     };
     taskStatus: {
       active: string;

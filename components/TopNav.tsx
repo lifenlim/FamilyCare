@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { History, Home, LogOut, UserCircle, Users } from "lucide-react";
+import {
+  History,
+  Home,
+  LogOut,
+  MessageSquareHeart,
+  UserCircle,
+  Users,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -14,6 +21,7 @@ const TAB_CONFIG = [
   { href: "/for-you", labelKey: "caringHub", icon: Home, roles: null },
   { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
   { href: "/members", labelKey: "members", icon: Users, roles: null },
+  { href: "/feedback", labelKey: "feedback", icon: MessageSquareHeart, roles: null },
   {
     href: "/activity",
     labelKey: "activity",
@@ -59,8 +67,8 @@ export function TopNav({
       <div className="mx-auto flex max-w-3xl justify-end px-3 pt-1.5 sm:px-4">
         <LanguageSwitcher />
       </div>
-      <div className="mx-auto flex max-w-3xl flex-col gap-2 px-3 pb-3 sm:px-4 sm:pb-4">
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-3 pb-3 sm:gap-3 sm:px-4 sm:pb-4">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <span
             className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary/20 bg-white sm:h-11 sm:w-11"
             aria-hidden="true"
@@ -85,25 +93,23 @@ export function TopNav({
             )}
           </div>
         </div>
-        <div className="flex items-center justify-end gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary whitespace-nowrap sm:text-xs">
             {roleBadgeLabel[role]}
           </span>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {email && (
-              <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
-                {email}
-              </span>
-            )}
-            <Button
-              variant="secondary"
-              onClick={handleSignOut}
-              className="min-h-0 shrink-0 px-2 py-1 text-xs sm:px-3 sm:text-sm"
-            >
-              <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
-            </Button>
-          </div>
+          {email && (
+            <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
+              {email}
+            </span>
+          )}
+          <Button
+            variant="secondary"
+            onClick={handleSignOut}
+            className="min-h-0 shrink-0 px-2 py-1 text-xs sm:px-3 sm:text-sm"
+          >
+            <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
+          </Button>
         </div>
       </div>
       <nav className="mx-auto flex max-w-3xl px-1 sm:gap-1 sm:px-4">

@@ -18,6 +18,7 @@ const en: Dictionary = {
     caringHub: "Caring Hub",
     profile: "Profile",
     members: "Members",
+    feedback: "Feedback",
     activity: "Activity",
     signOut: "Sign out",
     roleOwner: "Owner",
@@ -215,6 +216,20 @@ const en: Dictionary = {
     caretakerDescription: "Primary/Secondary Caretaker — can view and edit",
     familyMemberDescription: "Family Member — can view",
   },
+  feedback: {
+    heading: "Feedback",
+    intro: "We'd love to hear what you think — report a bug, share an idea, or just say hello.",
+    categoryLabel: "Category (optional)",
+    categoryPlaceholder: "Select a category",
+    messageLabel: "Your message",
+    messagePlaceholder: "Tell us what's on your mind...",
+    submit: "Send feedback",
+    submitting: "Sending...",
+    couldNotSubmit: "Could not send your feedback. Please try again.",
+    thankYouTitle: "Thank you!",
+    thankYouBody: "Your feedback has been sent. We appreciate you taking the time.",
+    sendAnother: "Send another",
+  },
   enums: {
     gender: {
       male: "Male",
@@ -239,6 +254,12 @@ const en: Dictionary = {
       biweekly: "Every two weeks",
       monthly: "Monthly",
       quarterly: "Every three months",
+    },
+    feedbackCategory: {
+      bug: "Bug",
+      idea: "Idea",
+      compliment: "Compliment",
+      other: "Other",
     },
     taskStatus: {
       active: "Active",
