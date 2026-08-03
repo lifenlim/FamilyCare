@@ -33,6 +33,8 @@ export interface Dictionary {
   login: {
     title: string;
     subtitle: string;
+    emailTab: string;
+    phoneTab: string;
     emailLabel: string;
     emailPlaceholder: string;
     sendButton: string;
@@ -40,6 +42,18 @@ export interface Dictionary {
     sentMessage: string;
     linkExpiredError: string;
     genericError: string;
+    phoneLabel: string;
+    phonePlaceholder: string;
+    sendCodeButton: string;
+    sendingCode: string;
+    codeSentMessage: string;
+    codeLabel: string;
+    codePlaceholder: string;
+    verifyCodeButton: string;
+    verifyingCode: string;
+    resendCode: string;
+    changePhoneNumber: string;
+    invalidCode: string;
   };
   authConfirm: {
     heading: string;

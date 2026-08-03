@@ -8,6 +8,7 @@
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   email text,
+  phone text,
   created_at timestamptz not null default now()
 );
 
@@ -498,28 +499,29 @@ $$;
 grant execute on function public.accept_invite(uuid) to authenticated;
 
 -- ============================================================
--- Keep profiles.email synced with auth.users
+-- Keep profiles.email/phone synced with auth.users (phone lets users
+-- without an email address sign in via SMS OTP instead)
 -- ============================================================
 
-create or replace function public.handle_user_email_sync()
+create or replace function public.handle_user_profile_sync()
 returns trigger
 language plpgsql
 security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
-  on conflict (id) do update set email = excluded.email;
+  insert into public.profiles (id, email, phone)
+  values (new.id, new.email, new.phone)
+  on conflict (id) do update set email = excluded.email, phone = excluded.phone;
   return new;
 end;
 $$;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
-  after insert or update of email on auth.users
-  for each row execute function public.handle_user_email_sync();
+  after insert or update of email, phone on auth.users
+  for each row execute function public.handle_user_profile_sync();
 
-insert into public.profiles (id, email)
-select id, email from auth.users
-on conflict (id) do update set email = excluded.email;
+insert into public.profiles (id, email, phone)
+select id, email, phone from auth.users
+on conflict (id) do update set email = excluded.email, phone = excluded.phone;

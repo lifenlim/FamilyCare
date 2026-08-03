@@ -34,8 +34,9 @@ const ms: Dictionary = {
   },
   login: {
     title: "FamilyCare",
-    subtitle:
-      "Log masuk dengan e-mel anda. Kami akan hantar pautan — tiada kata laluan diperlukan.",
+    subtitle: "Log masuk di bawah — tiada kata laluan diperlukan.",
+    emailTab: "E-mel",
+    phoneTab: "WhatsApp",
     emailLabel: "Alamat e-mel",
     emailPlaceholder: "anda@contoh.com",
     sendButton: "Hantar pautan log masuk",
@@ -46,6 +47,19 @@ const ms: Dictionary = {
       "Pautan log masuk ini sudah digunakan atau telah tamat tempoh. Sila minta pautan baharu di bawah.",
     genericError:
       "Pautan log masuk ini tidak berfungsi. Sila minta pautan baharu di bawah.",
+    phoneLabel: "Nombor WhatsApp",
+    phonePlaceholder: "+65 9123 4567",
+    sendCodeButton: "Hantar kod kepada saya",
+    sendingCode: "Menghantar kod...",
+    codeSentMessage:
+      "Kami telah menghantar kod melalui WhatsApp kepada anda. Masukkan di bawah untuk log masuk.",
+    codeLabel: "Kod 6 digit",
+    codePlaceholder: "123456",
+    verifyCodeButton: "Sahkan dan log masuk",
+    verifyingCode: "Mengesahkan...",
+    resendCode: "Hantar kod semula",
+    changePhoneNumber: "Guna nombor lain",
+    invalidCode: "Kod itu tidak berfungsi. Sila semak dan cuba lagi.",
   },
   authConfirm: {
     heading: "Selesaikan log masuk",

@@ -155,6 +155,7 @@ export interface CircleMember {
   role: MemberRole;
   created_at: string;
   email: string | null;
+  phone: string | null;
 }
 
 export interface CircleInvite {
@@ -179,6 +180,7 @@ export interface ActivityLogEntry {
   detail: string | null;
   created_at: string;
   email: string | null;
+  phone: string | null;
 }
 
 /**

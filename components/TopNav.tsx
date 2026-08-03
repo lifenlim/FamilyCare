@@ -32,11 +32,13 @@ const TAB_CONFIG = [
 
 export function TopNav({
   email,
+  phone,
   circleName,
   patientName,
   role,
 }: {
   email: string | null;
+  phone: string | null;
   circleName: string;
   patientName: string | null;
   role: CircleRole;
@@ -97,9 +99,9 @@ export function TopNav({
           <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary whitespace-nowrap sm:text-xs">
             {roleBadgeLabel[role]}
           </span>
-          {email && (
+          {(email || phone) && (
             <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
-              {email}
+              {email ?? phone}
             </span>
           )}
           <Button

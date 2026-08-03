@@ -14,7 +14,7 @@ export function MemberList({
   invites,
   isOwner,
 }: {
-  owner: { id: string; email: string | null };
+  owner: { id: string; email: string | null; phone: string | null };
   members: CircleMember[];
   invites: CircleInvite[];
   isOwner: boolean;
@@ -52,7 +52,7 @@ export function MemberList({
           <User className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
           <div className="flex flex-col gap-1">
             <p className="text-lg font-semibold">
-              {owner.email ?? dictionary.members.accountOwner}
+              {owner.email ?? owner.phone ?? dictionary.members.accountOwner}
             </p>
             <Badge tone="primary">{roleLabel.owner}</Badge>
           </div>
@@ -68,7 +68,7 @@ export function MemberList({
             <User className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
             <div className="flex flex-col gap-1">
               <p className="text-lg font-semibold">
-                {m.email ?? dictionary.members.circleMember}
+                {m.email ?? m.phone ?? dictionary.members.circleMember}
               </p>
               <Badge>{roleLabel[m.role]}</Badge>
             </div>

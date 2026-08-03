@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { LoginForm } from "@/components/auth/LoginForm";
+import { LoginTabs } from "@/components/auth/LoginTabs";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 
@@ -23,7 +23,7 @@ export default async function LoginPage() {
         <p className="mt-3 text-lg text-muted">{dictionary.login.subtitle}</p>
       </div>
       <Suspense fallback={null}>
-        <LoginForm />
+        <LoginTabs />
       </Suspense>
     </main>
   );

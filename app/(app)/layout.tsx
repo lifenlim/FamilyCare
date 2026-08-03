@@ -19,6 +19,7 @@ export default async function AppLayout({
     <div className="min-h-screen bg-surface">
       <TopNav
         email={user?.email ?? null}
+        phone={user?.phone ?? null}
         circleName={ctx.circleName}
         patientName={profile.patient_name}
         role={ctx.role}

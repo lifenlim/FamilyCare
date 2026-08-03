@@ -52,7 +52,7 @@ export function ActivityFeed({ entries }: { entries: ActivityLogEntry[] }) {
             className="border-b border-border pb-3 text-lg last:border-0"
           >
             <span className="font-semibold">
-              {entry.email ?? dictionary.activity.someone}
+              {entry.email ?? entry.phone ?? dictionary.activity.someone}
             </span>{" "}
             {label}
             {entry.detail ? <> — {entry.detail}</> : null}

@@ -158,15 +158,22 @@ export async function getTodayTaskChecklist(
 export async function getCircleOwner(
   supabase: SupabaseClient,
   circleId: string,
-): Promise<{ id: string; email: string | null }> {
+): Promise<{ id: string; email: string | null; phone: string | null }> {
   const { data, error } = await supabase
     .from("care_circles")
-    .select("owner_id, profiles(email)")
+    .select("owner_id, profiles(email, phone)")
     .eq("id", circleId)
     .single();
   if (error) throw error;
-  const profile = data.profiles as unknown as { email: string | null } | null;
-  return { id: data.owner_id as string, email: profile?.email ?? null };
+  const profile = data.profiles as unknown as {
+    email: string | null;
+    phone: string | null;
+  } | null;
+  return {
+    id: data.owner_id as string,
+    email: profile?.email ?? null,
+    phone: profile?.phone ?? null,
+  };
 }
 
 export async function getMembers(
@@ -175,15 +182,22 @@ export async function getMembers(
 ): Promise<CircleMember[]> {
   const { data, error } = await supabase
     .from("care_circle_members")
-    .select("*, profiles(email)")
+    .select("*, profiles(email, phone)")
     .eq("circle_id", circleId)
     .order("created_at");
   if (error) throw error;
-  return (data ?? []).map((m) => ({
-    ...m,
-    email: (m as unknown as { profiles: { email: string | null } | null }).profiles
-      ?.email ?? null,
-  })) as CircleMember[];
+  return (data ?? []).map((m) => {
+    const profile = (
+      m as unknown as {
+        profiles: { email: string | null; phone: string | null } | null;
+      }
+    ).profiles;
+    return {
+      ...m,
+      email: profile?.email ?? null,
+      phone: profile?.phone ?? null,
+    };
+  }) as CircleMember[];
 }
 
 export async function getPendingInvites(
@@ -208,14 +222,21 @@ export async function getActivityLog(
 ): Promise<ActivityLogEntry[]> {
   const { data, error } = await supabase
     .from("activity_log")
-    .select("*, profiles(email)")
+    .select("*, profiles(email, phone)")
     .eq("circle_id", circleId)
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
-  return (data ?? []).map((a) => ({
-    ...a,
-    email: (a as unknown as { profiles: { email: string | null } | null }).profiles
-      ?.email ?? null,
-  })) as ActivityLogEntry[];
+  return (data ?? []).map((a) => {
+    const profile = (
+      a as unknown as {
+        profiles: { email: string | null; phone: string | null } | null;
+      }
+    ).profiles;
+    return {
+      ...a,
+      email: profile?.email ?? null,
+      phone: profile?.phone ?? null,
+    };
+  }) as ActivityLogEntry[];
 }
