@@ -273,6 +273,20 @@ const en: Dictionary = {
     thankYouBody: "Your feedback has been sent. We appreciate you taking the time.",
     sendAnother: "Send another",
   },
+  alerts: {
+    heading: "Critical alerts",
+    blurb: "Get notified the moment a medication runs out, or on the morning of an appointment.",
+    enableButton: "Turn on critical alerts",
+    enabling: "Turning on...",
+    enabledMessage: "Critical alerts are on for this device.",
+    disableButton: "Turn off for this device",
+    disabling: "Turning off...",
+    unsupportedMessage: "This browser doesn't support push notifications.",
+    permissionDeniedMessage:
+      "Notifications are blocked for this site. Enable them in your browser's site settings.",
+    couldNotEnable: "Could not turn on alerts. Please try again.",
+    couldNotDisable: "Could not turn off alerts. Please try again.",
+  },
   enums: {
     gender: {
       male: "Male",

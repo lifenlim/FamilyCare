@@ -148,6 +148,15 @@ export async function topUpMedication(
     })
     .eq("id", medicationId);
   if (error) throw error;
+
+  // Balance is no longer zero -- let the critical alert fire again next
+  // time it actually runs out, instead of staying deduped forever.
+  await supabase
+    .from("critical_alerts_sent")
+    .delete()
+    .eq("alert_type", "medication_zero")
+    .eq("entity_id", medicationId);
+
   await logEdit(
     supabase,
     ctx.circleId,
@@ -170,11 +179,30 @@ export async function saveAppointment(formData: FormData): Promise<void> {
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
   if (id) {
+    const { data: existing } = await supabase
+      .from("appointments")
+      .select("appointment_at")
+      .eq("id", id)
+      .single();
+
     const { error } = await supabase
       .from("appointments")
       .update({ title, appointment_at, location, notes })
       .eq("id", id);
     if (error) throw error;
+
+    // If the date actually changed, let "appointment today" re-arm instead
+    // of staying deduped against the old date forever.
+    const oldDate = existing?.appointment_at?.slice(0, 10);
+    const newDate = appointment_at.slice(0, 10);
+    if (oldDate && oldDate !== newDate) {
+      await supabase
+        .from("critical_alerts_sent")
+        .delete()
+        .eq("alert_type", "appointment_today")
+        .eq("entity_id", id);
+    }
+
     await logEdit(supabase, ctx.circleId, "updated_appointment", "appointments", id, title);
   } else {
     const { data, error } = await supabase

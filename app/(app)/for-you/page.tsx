@@ -13,6 +13,7 @@ import { MedicationsSection } from "@/components/care-list/MedicationsSection";
 import { AppointmentsSection } from "@/components/care-list/AppointmentsSection";
 import { TasksSection } from "@/components/care-list/TasksSection";
 import { ViewLogger } from "@/components/care-list/ViewLogger";
+import { CriticalAlertsToggle } from "@/components/notifications/CriticalAlertsToggle";
 import { getDictionary, getLocale } from "@/lib/i18n/getDictionary";
 import { LOCALE_TAG } from "@/lib/i18n/config";
 
@@ -63,6 +64,7 @@ export default async function ForYouPage() {
         </p>
       </div>
       <LowStockBanner medications={medications} />
+      {canEdit && <CriticalAlertsToggle />}
 
       <SummaryCard
         medications={medications}

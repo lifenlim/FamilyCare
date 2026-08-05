@@ -265,6 +265,19 @@ export interface Dictionary {
     thankYouBody: string;
     sendAnother: string;
   };
+  alerts: {
+    heading: string;
+    blurb: string;
+    enableButton: string;
+    enabling: string;
+    enabledMessage: string;
+    disableButton: string;
+    disabling: string;
+    unsupportedMessage: string;
+    permissionDeniedMessage: string;
+    couldNotEnable: string;
+    couldNotDisable: string;
+  };
   enums: {
     gender: {
       male: string;

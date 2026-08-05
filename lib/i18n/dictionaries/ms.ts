@@ -277,6 +277,20 @@ const ms: Dictionary = {
     thankYouBody: "Maklum balas anda telah dihantar. Kami menghargai masa anda.",
     sendAnother: "Hantar satu lagi",
   },
+  alerts: {
+    heading: "Makluman kritikal",
+    blurb: "Terima makluman sebaik sahaja ubat kehabisan, atau pada pagi hari temujanji.",
+    enableButton: "Hidupkan makluman kritikal",
+    enabling: "Menghidupkan...",
+    enabledMessage: "Makluman kritikal telah dihidupkan untuk peranti ini.",
+    disableButton: "Matikan untuk peranti ini",
+    disabling: "Mematikan...",
+    unsupportedMessage: "Pelayar ini tidak menyokong pemberitahuan tolak.",
+    permissionDeniedMessage:
+      "Pemberitahuan disekat untuk laman ini. Hidupkannya dalam tetapan laman pelayar anda.",
+    couldNotEnable: "Tidak dapat menghidupkan makluman. Sila cuba lagi.",
+    couldNotDisable: "Tidak dapat mematikan makluman. Sila cuba lagi.",
+  },
   enums: {
     gender: {
       male: "Lelaki",

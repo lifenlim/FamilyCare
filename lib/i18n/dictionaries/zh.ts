@@ -269,6 +269,19 @@ const zh: Dictionary = {
     thankYouBody: "您的反馈已发送，感谢您抽出时间。",
     sendAnother: "再发送一条",
   },
+  alerts: {
+    heading: "重要提醒",
+    blurb: "药物一旦用完，或预约当天早上，立即通知您。",
+    enableButton: "开启重要提醒",
+    enabling: "正在开启...",
+    enabledMessage: "此设备的重要提醒已开启。",
+    disableButton: "在此设备关闭",
+    disabling: "正在关闭...",
+    unsupportedMessage: "此浏览器不支持推送通知。",
+    permissionDeniedMessage: "此网站的通知已被屏蔽。请在浏览器的网站设置中开启。",
+    couldNotEnable: "无法开启提醒，请重试。",
+    couldNotDisable: "无法关闭提醒，请重试。",
+  },
   enums: {
     gender: {
       male: "男",
