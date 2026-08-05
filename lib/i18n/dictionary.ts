@@ -26,6 +26,7 @@ export interface Dictionary {
     roleCareTaker: string;
     roleFamilyMember: string;
     language: string;
+    switchCircle: string;
   };
   loading: {
     text: string;

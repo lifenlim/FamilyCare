@@ -1,11 +1,37 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getCircleContext } from "@/lib/supabase/queries";
+import {
+  ACTIVE_CIRCLE_COOKIE,
+  getCircleContext,
+  listUserCircles,
+} from "@/lib/supabase/queries";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { MemberRole } from "@/lib/types";
+
+async function setActiveCircleCookie(circleId: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(ACTIVE_CIRCLE_COOKIE, circleId, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 365,
+    path: "/",
+  });
+}
+
+export async function setActiveCircle(circleId: string): Promise<void> {
+  const supabase = await createClient();
+  const circles = await listUserCircles(supabase);
+  if (!circles.some((c) => c.circleId === circleId)) {
+    throw new Error("You don't have access to that circle.");
+  }
+  await setActiveCircleCookie(circleId);
+  revalidatePath("/", "layout");
+}
 
 export async function createInvite(role: MemberRole): Promise<string> {
   const supabase = await createClient();
@@ -64,12 +90,22 @@ const ACCEPT_INVITE_ERRORS: Record<string, keyof Dictionary["invite"]["errors"]>
 
 export async function acceptInvite(token: string): Promise<void> {
   const supabase = await createClient();
-  const { error } = await supabase.rpc("accept_invite", { p_token: token });
+  const { data, error } = await supabase
+    .rpc("accept_invite", { p_token: token })
+    .single();
   if (error) {
     const dictionary = await getDictionary();
     const key = ACCEPT_INVITE_ERRORS[error.message];
     throw new Error(key ? dictionary.invite.errors[key] : error.message);
   }
+
+  // Joining a circle is a deliberate choice -- switch to it immediately
+  // rather than leaving whichever circle happened to be active before.
+  const result = data as { out_circle_id: string } | null;
+  if (result) {
+    await setActiveCircleCookie(result.out_circle_id);
+  }
+
   revalidatePath("/for-you");
 }
 

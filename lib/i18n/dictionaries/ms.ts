@@ -28,6 +28,7 @@ const ms: Dictionary = {
     roleCareTaker: "Penjaga",
     roleFamilyMember: "Ahli Keluarga",
     language: "Bahasa",
+    switchCircle: "Tukar orang yang anda jaga",
   },
   loading: {
     text: "Memuatkan…",

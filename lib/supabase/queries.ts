@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   ActivityLogEntry,
@@ -12,7 +13,56 @@ import type {
   Medication,
   MemberRole,
   TaskChecklistEntry,
+  UserCircleOption,
 } from "@/lib/types";
+
+export const ACTIVE_CIRCLE_COOKIE = "active_circle_id";
+
+// Every circle a user can access -- the one they own (a user owns at most
+// one, enforced by a unique constraint) plus any they've been invited into
+// and accepted. Used to populate the circle switcher and to validate a
+// requested active-circle switch.
+export async function listUserCircles(
+  supabase: SupabaseClient,
+): Promise<UserCircleOption[]> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const [{ data: owned }, { data: memberships }] = await Promise.all([
+    supabase
+      .from("care_circles")
+      .select("id, name, patient_name")
+      .eq("owner_id", user.id),
+    supabase
+      .from("care_circle_members")
+      .select("circle_id, role, care_circles(name, patient_name)")
+      .eq("user_id", user.id),
+  ]);
+
+  const circles: UserCircleOption[] = (owned ?? []).map((c) => ({
+    circleId: c.id,
+    circleName: c.name,
+    patientName: c.patient_name,
+    role: "owner" as const,
+  }));
+
+  for (const m of memberships ?? []) {
+    const circle = m.care_circles as unknown as {
+      name: string;
+      patient_name: string | null;
+    } | null;
+    circles.push({
+      circleId: m.circle_id,
+      circleName: circle?.name ?? "Family Care",
+      patientName: circle?.patient_name ?? null,
+      role: m.role as MemberRole,
+    });
+  }
+
+  return circles;
+}
 
 export async function getCircleContext(
   supabase: SupabaseClient,
@@ -22,34 +72,16 @@ export async function getCircleContext(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Membership in someone else's circle (accepted via an invite) takes
-  // priority over an owned circle -- ownership is often just a leftover
-  // auto-created circle from visiting the app before ever accepting an
-  // invite, not a deliberate choice to run a separate circle.
-  const { data: membership } = await supabase
-    .from("care_circle_members")
-    .select("circle_id, role, care_circles(name)")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
+  const circles = await listUserCircles(supabase);
 
-  if (membership) {
-    const circle = membership.care_circles as unknown as { name: string } | null;
-    return {
-      circleId: membership.circle_id,
-      circleName: circle?.name ?? "Family Care",
-      role: membership.role as MemberRole,
-    };
-  }
-
-  const { data: owned } = await supabase
-    .from("care_circles")
-    .select("id, name")
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (owned) {
-    return { circleId: owned.id, circleName: owned.name, role: "owner" };
+  if (circles.length > 0) {
+    const cookieStore = await cookies();
+    const activeId = cookieStore.get(ACTIVE_CIRCLE_COOKIE)?.value;
+    const chosen =
+      circles.find((c) => c.circleId === activeId) ??
+      circles.find((c) => c.role === "owner") ??
+      circles[0];
+    return { circleId: chosen.circleId, circleName: chosen.circleName, role: chosen.role };
   }
 
   const { data: created, error } = await supabase

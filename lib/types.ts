@@ -7,6 +7,13 @@ export interface CircleContext {
   role: CircleRole;
 }
 
+export interface UserCircleOption {
+  circleId: string;
+  circleName: string;
+  patientName: string | null;
+  role: CircleRole;
+}
+
 export type Gender = "male" | "female" | "other" | "prefer_not_to_say";
 
 export interface CircleProfile {

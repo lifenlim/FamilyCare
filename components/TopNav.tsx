@@ -13,9 +13,10 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { CircleSwitcher } from "@/components/CircleSwitcher";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import type { CircleRole } from "@/lib/types";
+import type { CircleRole, UserCircleOption } from "@/lib/types";
 
 const TAB_CONFIG = [
   { href: "/for-you", labelKey: "caringHub", icon: Home, roles: null },
@@ -36,12 +37,16 @@ export function TopNav({
   circleName,
   patientName,
   role,
+  circles,
+  activeCircleId,
 }: {
   email: string | null;
   phone: string | null;
   circleName: string;
   patientName: string | null;
   role: CircleRole;
+  circles: UserCircleOption[];
+  activeCircleId: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -84,14 +89,20 @@ export function TopNav({
               className="h-full w-full object-cover"
             />
           </span>
-          <div className="min-w-0">
-            <p className="truncate text-lg leading-tight font-bold sm:text-xl">
-              {circleName}
-            </p>
-            {patientName && (
-              <p className="truncate text-sm leading-tight text-muted sm:text-base">
-                {patientName}
-              </p>
+          <div className="min-w-0 flex-1">
+            {circles.length > 1 ? (
+              <CircleSwitcher circles={circles} activeCircleId={activeCircleId} />
+            ) : (
+              <>
+                <p className="truncate text-lg leading-tight font-bold sm:text-xl">
+                  {circleName}
+                </p>
+                {patientName && (
+                  <p className="truncate text-sm leading-tight text-muted sm:text-base">
+                    {patientName}
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>
