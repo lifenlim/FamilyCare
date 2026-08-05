@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Loader2 } from "lucide-react";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import {
   disablePush,
@@ -70,7 +70,11 @@ export function CriticalAlertsToggle() {
   return (
     <div className="flex flex-col items-end gap-1.5">
       <div className="flex items-center gap-2.5">
-        <Bell className="h-4 w-4 text-primary" aria-hidden="true" />
+        {busy ? (
+          <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />
+        ) : (
+          <Bell className="h-4 w-4 text-primary" aria-hidden="true" />
+        )}
         <span className="text-sm font-medium text-foreground">
           {dictionary.alerts.heading}
         </span>
@@ -83,7 +87,7 @@ export function CriticalAlertsToggle() {
           disabled={busy}
           className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
             isOn ? "bg-primary" : "bg-border"
-          } ${busy ? "animate-pulse opacity-70" : ""}`}
+          } ${busy ? "opacity-70" : ""}`}
         >
           <span
             className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
