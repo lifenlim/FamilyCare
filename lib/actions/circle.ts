@@ -58,17 +58,15 @@ export async function createCircle(): Promise<string> {
 
 export async function createInvite(role: MemberRole): Promise<string> {
   const supabase = await createClient();
-  const [ctx, dictionary] = await Promise.all([
+  const [ctx, dictionary, { data: { user } }] = await Promise.all([
     getCircleContext(supabase),
     getDictionary(),
+    supabase.auth.getUser(),
   ]);
   if (ctx.role !== "owner") {
     throw new Error(dictionary.members.ownerOnlyInvite);
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   const { data, error } = await supabase
     .from("care_circle_invites")
     .insert({ circle_id: ctx.circleId, role, created_by: user!.id })

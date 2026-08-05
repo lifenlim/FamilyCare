@@ -12,33 +12,35 @@ async function requireEditor(): Promise<{
   supabase: SupabaseClient;
   ctx: CircleContext;
   dictionary: Dictionary;
+  userId: string;
 }> {
   const supabase = await createClient();
-  const [ctx, dictionary] = await Promise.all([
+  const [ctx, dictionary, { data: { user } }] = await Promise.all([
     getCircleContext(supabase),
     getDictionary(),
+    supabase.auth.getUser(),
   ]);
   if (ctx.role === "viewer") {
     throw new Error(dictionary.common.viewerReadOnlyCareInfo);
   }
-  return { supabase, ctx, dictionary };
+  if (!user) {
+    throw new Error(dictionary.common.notSignedIn);
+  }
+  return { supabase, ctx, dictionary, userId: user.id };
 }
 
-async function logEdit(
+function logEdit(
   supabase: SupabaseClient,
   circleId: string,
+  userId: string,
   action: string,
   entityType: string,
   entityId: string,
   detail: string,
 ) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
-  await supabase.from("activity_log").insert({
+  return supabase.from("activity_log").insert({
     circle_id: circleId,
-    user_id: user.id,
+    user_id: userId,
     action,
     entity_type: entityType,
     entity_id: entityId,
@@ -51,7 +53,7 @@ function revalidateCareList() {
 }
 
 export async function saveMedication(formData: FormData): Promise<void> {
-  const { supabase, ctx, dictionary } = await requireEditor();
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
   if (!name) throw new Error(dictionary.medications.nameRequired);
@@ -68,7 +70,7 @@ export async function saveMedication(formData: FormData): Promise<void> {
       .update({ name, dose_amount, frequency, notes })
       .eq("id", id);
     if (error) throw error;
-    await logEdit(supabase, ctx.circleId, "updated_medication", "medications", id, name);
+    await logEdit(supabase, ctx.circleId, userId, "updated_medication", "medications", id, name);
   } else {
     const initialBalanceRaw = (formData.get("initial_balance") as string) ?? "";
     if (initialBalanceRaw.trim() === "") {
@@ -92,6 +94,7 @@ export async function saveMedication(formData: FormData): Promise<void> {
     await logEdit(
       supabase,
       ctx.circleId,
+      userId,
       "created_medication",
       "medications",
       data.id,
@@ -105,7 +108,7 @@ export async function deleteMedication(
   medicationId: string,
   medicationName: string,
 ): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, userId } = await requireEditor();
   const { error } = await supabase
     .from("medications")
     .delete()
@@ -114,6 +117,7 @@ export async function deleteMedication(
   await logEdit(
     supabase,
     ctx.circleId,
+    userId,
     "deleted_medication",
     "medications",
     medicationId,
@@ -127,7 +131,7 @@ export async function topUpMedication(
   amount: number,
   medicationName: string,
 ): Promise<void> {
-  const { supabase, ctx, dictionary } = await requireEditor();
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
   if (!Number.isFinite(amount) || amount <= 0) {
     throw new Error(dictionary.medications.topUpAmountInvalid);
   }
@@ -149,17 +153,13 @@ export async function topUpMedication(
     .eq("id", medicationId);
   if (error) throw error;
 
-  // Balance is no longer zero -- let the critical alert fire again next
-  // time it actually runs out, instead of staying deduped forever.
-  await supabase
-    .from("critical_alerts_sent")
-    .delete()
-    .eq("alert_type", "medication_zero")
-    .eq("entity_id", medicationId);
+  // A trigger clears the medication_zero dedup record on this update --
+  // see supabase/migrations/0018_auto_clear_critical_alerts.sql.
 
   await logEdit(
     supabase,
     ctx.circleId,
+    userId,
     "topped_up_medication",
     "medications",
     medicationId,
@@ -169,7 +169,7 @@ export async function topUpMedication(
 }
 
 export async function saveAppointment(formData: FormData): Promise<void> {
-  const { supabase, ctx, dictionary } = await requireEditor();
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const title = (formData.get("title") as string).trim();
   if (!title) throw new Error(dictionary.appointments.titleRequired);
@@ -179,31 +179,16 @@ export async function saveAppointment(formData: FormData): Promise<void> {
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
   if (id) {
-    const { data: existing } = await supabase
-      .from("appointments")
-      .select("appointment_at")
-      .eq("id", id)
-      .single();
-
     const { error } = await supabase
       .from("appointments")
       .update({ title, appointment_at, location, notes })
       .eq("id", id);
     if (error) throw error;
 
-    // If the date actually changed, let "appointment today" re-arm instead
-    // of staying deduped against the old date forever.
-    const oldDate = existing?.appointment_at?.slice(0, 10);
-    const newDate = appointment_at.slice(0, 10);
-    if (oldDate && oldDate !== newDate) {
-      await supabase
-        .from("critical_alerts_sent")
-        .delete()
-        .eq("alert_type", "appointment_today")
-        .eq("entity_id", id);
-    }
+    // A trigger clears the appointment_today dedup record when the date
+    // actually changes -- see 0018_auto_clear_critical_alerts.sql.
 
-    await logEdit(supabase, ctx.circleId, "updated_appointment", "appointments", id, title);
+    await logEdit(supabase, ctx.circleId, userId, "updated_appointment", "appointments", id, title);
   } else {
     const { data, error } = await supabase
       .from("appointments")
@@ -214,6 +199,7 @@ export async function saveAppointment(formData: FormData): Promise<void> {
     await logEdit(
       supabase,
       ctx.circleId,
+      userId,
       "created_appointment",
       "appointments",
       data.id,
@@ -227,7 +213,7 @@ export async function deleteAppointment(
   appointmentId: string,
   title: string,
 ): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, userId } = await requireEditor();
   const { error } = await supabase
     .from("appointments")
     .delete()
@@ -236,6 +222,7 @@ export async function deleteAppointment(
   await logEdit(
     supabase,
     ctx.circleId,
+    userId,
     "deleted_appointment",
     "appointments",
     appointmentId,
@@ -245,7 +232,7 @@ export async function deleteAppointment(
 }
 
 export async function saveAllergy(formData: FormData): Promise<void> {
-  const { supabase, ctx, dictionary } = await requireEditor();
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
   if (!name) throw new Error(dictionary.allergies.nameRequired);
@@ -258,7 +245,7 @@ export async function saveAllergy(formData: FormData): Promise<void> {
       .update({ name, severity, notes })
       .eq("id", id);
     if (error) throw error;
-    await logEdit(supabase, ctx.circleId, "updated_allergy", "allergies", id, name);
+    await logEdit(supabase, ctx.circleId, userId, "updated_allergy", "allergies", id, name);
   } else {
     const { data, error } = await supabase
       .from("allergies")
@@ -266,7 +253,7 @@ export async function saveAllergy(formData: FormData): Promise<void> {
       .select("id")
       .single();
     if (error) throw error;
-    await logEdit(supabase, ctx.circleId, "created_allergy", "allergies", data.id, name);
+    await logEdit(supabase, ctx.circleId, userId, "created_allergy", "allergies", data.id, name);
   }
   revalidateCareList();
 }
@@ -275,15 +262,15 @@ export async function deleteAllergy(
   allergyId: string,
   name: string,
 ): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, userId } = await requireEditor();
   const { error } = await supabase.from("allergies").delete().eq("id", allergyId);
   if (error) throw error;
-  await logEdit(supabase, ctx.circleId, "deleted_allergy", "allergies", allergyId, name);
+  await logEdit(supabase, ctx.circleId, userId, "deleted_allergy", "allergies", allergyId, name);
   revalidateCareList();
 }
 
 export async function saveCareTask(formData: FormData): Promise<void> {
-  const { supabase, ctx, dictionary } = await requireEditor();
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
   const id = (formData.get("id") as string) || null;
   const name = (formData.get("name") as string).trim();
   if (!name) throw new Error(dictionary.tasks.nameRequired);
@@ -324,7 +311,7 @@ export async function saveCareTask(formData: FormData): Promise<void> {
       .update(payload)
       .eq("id", id);
     if (error) throw error;
-    await logEdit(supabase, ctx.circleId, "updated_task", "care_tasks", id, name);
+    await logEdit(supabase, ctx.circleId, userId, "updated_task", "care_tasks", id, name);
   } else {
     const { data, error } = await supabase
       .from("care_tasks")
@@ -335,6 +322,7 @@ export async function saveCareTask(formData: FormData): Promise<void> {
     await logEdit(
       supabase,
       ctx.circleId,
+      userId,
       "created_task",
       "care_tasks",
       data.id,
@@ -348,10 +336,10 @@ export async function deleteCareTask(
   taskId: string,
   name: string,
 ): Promise<void> {
-  const { supabase, ctx } = await requireEditor();
+  const { supabase, ctx, userId } = await requireEditor();
   const { error } = await supabase.from("care_tasks").delete().eq("id", taskId);
   if (error) throw error;
-  await logEdit(supabase, ctx.circleId, "deleted_task", "care_tasks", taskId, name);
+  await logEdit(supabase, ctx.circleId, userId, "deleted_task", "care_tasks", taskId, name);
   revalidateCareList();
 }
 
