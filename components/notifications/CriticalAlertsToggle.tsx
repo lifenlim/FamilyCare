@@ -69,8 +69,8 @@ export function CriticalAlertsToggle() {
   return (
     <div className="flex flex-col items-end gap-1.5">
       <div className="flex items-center gap-2.5">
-        <Bell className="h-5 w-5 text-primary" aria-hidden="true" />
-        <span className="text-base font-medium text-foreground">
+        <Bell className="h-4 w-4 text-primary" aria-hidden="true" />
+        <span className="text-sm font-medium text-foreground">
           {dictionary.alerts.heading}
         </span>
         <button
