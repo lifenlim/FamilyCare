@@ -22,16 +22,10 @@ export async function getCircleContext(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  const { data: owned } = await supabase
-    .from("care_circles")
-    .select("id, name")
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (owned) {
-    return { circleId: owned.id, circleName: owned.name, role: "owner" };
-  }
-
+  // Membership in someone else's circle (accepted via an invite) takes
+  // priority over an owned circle -- ownership is often just a leftover
+  // auto-created circle from visiting the app before ever accepting an
+  // invite, not a deliberate choice to run a separate circle.
   const { data: membership } = await supabase
     .from("care_circle_members")
     .select("circle_id, role, care_circles(name)")
@@ -46,6 +40,16 @@ export async function getCircleContext(
       circleName: circle?.name ?? "Family Care",
       role: membership.role as MemberRole,
     };
+  }
+
+  const { data: owned } = await supabase
+    .from("care_circles")
+    .select("id, name")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (owned) {
+    return { circleId: owned.id, circleName: owned.name, role: "owner" };
   }
 
   const { data: created, error } = await supabase
