@@ -235,7 +235,7 @@ export interface Dictionary {
     invalidTitle: string;
     invalidBody: string;
     invitedTo: (circleName: string) => string;
-    invitedToPatient: (patientName: string) => string;
+    invitedToPatient: (patientName: string, circleName: string) => string;
     roleLabel: string;
     signInToAccept: string;
     signInButton: string;

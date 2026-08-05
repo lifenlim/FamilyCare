@@ -52,7 +52,7 @@ export default async function InvitePage({
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-6 py-12 text-center">
       <h1 className="text-3xl font-bold">
         {data.patient_name
-          ? dictionary.invite.invitedToPatient(data.patient_name)
+          ? dictionary.invite.invitedToPatient(data.patient_name, data.circle_name)
           : dictionary.invite.invitedTo(data.circle_name)}
       </h1>
       <Card>
