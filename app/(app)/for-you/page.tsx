@@ -55,15 +55,15 @@ export default async function ForYouPage() {
   return (
     <div className="flex flex-col gap-8">
       <ViewLogger circleId={ctx.circleId} />
-      <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">
-          {dictionary.forYou.heading}
-        </h1>
-        <p className="mt-1 text-base text-muted sm:text-lg">
-          {formatToday(LOCALE_TAG[locale])}
-        </p>
-      </div>
       <div className="flex flex-col gap-2">
+        <div>
+          <h1 className="text-2xl font-bold sm:text-3xl">
+            {dictionary.forYou.heading}
+          </h1>
+          <p className="mt-1 text-base text-muted sm:text-lg">
+            {formatToday(LOCALE_TAG[locale])}
+          </p>
+        </div>
         {canEdit && (
           <div className="flex justify-end">
             <CriticalAlertsToggle />
