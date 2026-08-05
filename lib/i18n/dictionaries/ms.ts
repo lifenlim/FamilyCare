@@ -29,6 +29,7 @@ const ms: Dictionary = {
     roleFamilyMember: "Ahli Keluarga",
     language: "Bahasa",
     switchCircle: "Tukar orang yang anda jaga",
+    addAnotherCircle: "+ Jaga orang lain",
   },
   loading: {
     text: "Memuatkan…",

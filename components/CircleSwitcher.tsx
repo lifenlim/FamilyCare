@@ -2,9 +2,11 @@
 
 import { useTransition, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import { setActiveCircle } from "@/lib/actions/circle";
+import { createCircle, setActiveCircle } from "@/lib/actions/circle";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { CircleRole, UserCircleOption } from "@/lib/types";
+
+const CREATE_NEW = "__create_new__";
 
 export function CircleSwitcher({
   circles,
@@ -17,8 +19,6 @@ export function CircleSwitcher({
   const { dictionary } = useLocale();
   const [pending, startTransition] = useTransition();
 
-  if (circles.length <= 1) return null;
-
   const roleLabel: Record<CircleRole, string> = {
     owner: dictionary.nav.roleOwner,
     editor: dictionary.nav.roleCareTaker,
@@ -26,9 +26,14 @@ export function CircleSwitcher({
   };
 
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
-    const circleId = e.target.value;
+    const value = e.target.value;
     startTransition(async () => {
-      await setActiveCircle(circleId);
+      if (value === CREATE_NEW) {
+        await createCircle();
+        router.push("/profile");
+      } else {
+        await setActiveCircle(value);
+      }
       router.refresh();
     });
   }
@@ -48,6 +53,7 @@ export function CircleSwitcher({
             {c.patientName || c.circleName} — {roleLabel[c.role]}
           </option>
         ))}
+        <option value={CREATE_NEW}>{dictionary.nav.addAnotherCircle}</option>
       </select>
     </label>
   );

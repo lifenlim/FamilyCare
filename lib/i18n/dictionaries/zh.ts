@@ -29,6 +29,7 @@ const zh: Dictionary = {
     roleFamilyMember: "家庭成员",
     language: "语言",
     switchCircle: "切换正在照顾的对象",
+    addAnotherCircle: "+ 照顾另一位",
   },
   loading: {
     text: "加载中…",

@@ -29,6 +29,7 @@ const en: Dictionary = {
     roleFamilyMember: "Family Member",
     language: "Language",
     switchCircle: "Switch who you're caring for",
+    addAnotherCircle: "+ Care for someone else",
   },
   loading: {
     text: "Loading…",

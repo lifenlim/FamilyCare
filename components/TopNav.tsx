@@ -34,16 +34,12 @@ const TAB_CONFIG = [
 export function TopNav({
   email,
   phone,
-  circleName,
-  patientName,
   role,
   circles,
   activeCircleId,
 }: {
   email: string | null;
   phone: string | null;
-  circleName: string;
-  patientName: string | null;
   role: CircleRole;
   circles: UserCircleOption[];
   activeCircleId: string;
@@ -90,20 +86,7 @@ export function TopNav({
             />
           </span>
           <div className="min-w-0 flex-1">
-            {circles.length > 1 ? (
-              <CircleSwitcher circles={circles} activeCircleId={activeCircleId} />
-            ) : (
-              <>
-                <p className="truncate text-lg leading-tight font-bold sm:text-xl">
-                  {circleName}
-                </p>
-                {patientName && (
-                  <p className="truncate text-sm leading-tight text-muted sm:text-base">
-                    {patientName}
-                  </p>
-                )}
-              </>
-            )}
+            <CircleSwitcher circles={circles} activeCircleId={activeCircleId} />
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

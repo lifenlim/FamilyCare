@@ -33,6 +33,29 @@ export async function setActiveCircle(circleId: string): Promise<void> {
   revalidatePath("/", "layout");
 }
 
+// A plain insert is enough -- RLS's "circle created by owner" policy
+// already permits owner_id = auth.uid(), no RPC needed. Used for a
+// deliberate "care for someone else too" action, as opposed to
+// ensure_my_circle's implicit first-visit bootstrap.
+export async function createCircle(): Promise<string> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase
+    .from("care_circles")
+    .insert({ owner_id: user.id })
+    .select("id")
+    .single();
+  if (error) throw error;
+
+  await setActiveCircleCookie(data.id);
+  revalidatePath("/", "layout");
+  return data.id as string;
+}
+
 export async function createInvite(role: MemberRole): Promise<string> {
   const supabase = await createClient();
   const [ctx, dictionary] = await Promise.all([
