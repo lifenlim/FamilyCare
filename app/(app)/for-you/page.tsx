@@ -63,12 +63,14 @@ export default async function ForYouPage() {
           {formatToday(LOCALE_TAG[locale])}
         </p>
       </div>
-      {canEdit && (
-        <div className="flex justify-end">
-          <CriticalAlertsToggle />
-        </div>
-      )}
-      <LowStockBanner medications={medications} />
+      <div className="flex flex-col gap-2">
+        {canEdit && (
+          <div className="flex justify-end">
+            <CriticalAlertsToggle />
+          </div>
+        )}
+        <LowStockBanner medications={medications} />
+      </div>
 
       <SummaryCard
         medications={medications}
