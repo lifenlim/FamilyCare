@@ -29,26 +29,16 @@ function formatToday(localeTag: string) {
 export default async function ForYouPage() {
   const supabase = await createClient();
   const ctx = await getCircleContext(supabase);
-  const [dictionary, locale] = await Promise.all([
-    getDictionary(),
-    getLocale(),
-  ]);
-
-  const [medications, appointments, tasks] = await Promise.all([
-    getMedications(supabase, ctx.circleId),
-    getAppointments(supabase, ctx.circleId),
-    getCareTasks(supabase, ctx.circleId),
-  ]);
-  const [checklist, taskChecklist] = await Promise.all([
-    getTodayChecklist(
-      supabase,
-      medications.map((m) => m.id),
-    ),
-    getTodayTaskChecklist(
-      supabase,
-      tasks.map((t) => t.id),
-    ),
-  ]);
+  const [dictionary, locale, medications, appointments, tasks, checklist, taskChecklist] =
+    await Promise.all([
+      getDictionary(),
+      getLocale(),
+      getMedications(supabase, ctx.circleId),
+      getAppointments(supabase, ctx.circleId),
+      getCareTasks(supabase, ctx.circleId),
+      getTodayChecklist(supabase, ctx.circleId),
+      getTodayTaskChecklist(supabase, ctx.circleId),
+    ]);
 
   const canEdit = ctx.role !== "viewer";
 

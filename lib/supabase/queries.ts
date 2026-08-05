@@ -11,7 +11,6 @@ import type {
   CircleProfile,
   DoseChecklistEntry,
   Medication,
-  MemberRole,
   TaskChecklistEntry,
   UserCircleOption,
 } from "@/lib/types";
@@ -21,55 +20,27 @@ export const ACTIVE_CIRCLE_COOKIE = "active_circle_id";
 // Every circle a user can access -- circles they own (any number, now that
 // one user can own several) plus any they've been invited into and
 // accepted. Used to populate the circle switcher and to validate a
-// requested active-circle switch. Takes the already-fetched user so callers
-// that need both this and the active context (e.g. the app layout) don't
-// pay for auth.getUser() twice.
-async function listUserCirclesForUser(
-  supabase: SupabaseClient,
-  userId: string,
-): Promise<UserCircleOption[]> {
-  const [{ data: owned }, { data: memberships }] = await Promise.all([
-    supabase
-      .from("care_circles")
-      .select("id, name, patient_name")
-      .eq("owner_id", userId),
-    supabase
-      .from("care_circle_members")
-      .select("circle_id, role, care_circles(name, patient_name)")
-      .eq("user_id", userId),
-  ]);
-
-  const circles: UserCircleOption[] = (owned ?? []).map((c) => ({
-    circleId: c.id,
-    circleName: c.name,
-    patientName: c.patient_name,
-    role: "owner" as const,
-  }));
-
-  for (const m of memberships ?? []) {
-    const circle = m.care_circles as unknown as {
-      name: string;
-      patient_name: string | null;
-    } | null;
-    circles.push({
-      circleId: m.circle_id,
-      circleName: circle?.name ?? "Family Care",
-      patientName: circle?.patient_name ?? null,
-      role: m.role as MemberRole,
-    });
-  }
-
-  return circles;
-}
-
+// requested active-circle switch. Backed by list_my_circles(), a single RPC
+// that uses auth.uid() internally -- no separate auth.getUser() round trip
+// needed just to get an id to filter by.
 export async function listUserCircles(
   supabase: SupabaseClient,
 ): Promise<UserCircleOption[]> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return [];
-  return listUserCirclesForUser(supabase, user.id);
+  const { data, error } = await supabase.rpc("list_my_circles");
+  if (error || !data) return [];
+  return (
+    data as {
+      circle_id: string;
+      circle_name: string;
+      patient_name: string | null;
+      role: string;
+    }[]
+  ).map((c) => ({
+    circleId: c.circle_id,
+    circleName: c.circle_name,
+    patientName: c.patient_name,
+    role: c.role as UserCircleOption["role"],
+  }));
 }
 
 function pickActiveCircle(
@@ -85,15 +56,16 @@ function pickActiveCircle(
 
 // Resolves both the active circle and the full switcher list from a single
 // fetch -- used by the app layout, which needs both on every navigation.
+// The circle list and the auth check run in parallel since list_my_circles
+// no longer depends on a pre-fetched user id.
 export async function getCircleContextAndOptions(
   supabase: SupabaseClient,
 ): Promise<{ ctx: CircleContext; circles: UserCircleOption[] }> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [circles, { data: { user } }] = await Promise.all([
+    listUserCircles(supabase),
+    supabase.auth.getUser(),
+  ]);
   if (!user) throw new Error("Not authenticated");
-
-  const circles = await listUserCirclesForUser(supabase, user.id);
 
   if (circles.length > 0) {
     const cookieStore = await cookies();
@@ -193,32 +165,47 @@ export async function getCareTasks(
 
 export async function getTodayChecklist(
   supabase: SupabaseClient,
-  medicationIds: string[],
+  circleId: string,
 ): Promise<DoseChecklistEntry[]> {
-  if (medicationIds.length === 0) return [];
+  // Filtering through the medications join (rather than requiring a
+  // pre-fetched list of medication ids) lets this run in parallel with
+  // getMedications instead of waiting on it.
   const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await supabase
     .from("dose_checklist")
-    .select("*")
-    .in("medication_id", medicationIds)
+    .select("id, medication_id, checklist_date, taken, taken_by, taken_at, medications!inner(circle_id)")
+    .eq("medications.circle_id", circleId)
     .eq("checklist_date", today);
   if (error) throw error;
-  return (data ?? []) as DoseChecklistEntry[];
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    medication_id: row.medication_id,
+    checklist_date: row.checklist_date,
+    taken: row.taken,
+    taken_by: row.taken_by,
+    taken_at: row.taken_at,
+  }));
 }
 
 export async function getTodayTaskChecklist(
   supabase: SupabaseClient,
-  taskIds: string[],
+  circleId: string,
 ): Promise<TaskChecklistEntry[]> {
-  if (taskIds.length === 0) return [];
   const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await supabase
     .from("task_checklist")
-    .select("*")
-    .in("task_id", taskIds)
+    .select("id, task_id, checklist_date, done, done_by, done_at, care_tasks!inner(circle_id)")
+    .eq("care_tasks.circle_id", circleId)
     .eq("checklist_date", today);
   if (error) throw error;
-  return (data ?? []) as TaskChecklistEntry[];
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    task_id: row.task_id,
+    checklist_date: row.checklist_date,
+    done: row.done,
+    done_by: row.done_by,
+    done_at: row.done_at,
+  }));
 }
 
 export async function getCircleOwner(
