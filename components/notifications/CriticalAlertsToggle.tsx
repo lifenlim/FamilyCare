@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, BellOff } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { Button } from "@/components/ui/Button";
 import {
   disablePush,
   enablePush,
@@ -34,8 +33,20 @@ export function CriticalAlertsToggle() {
     };
   }, []);
 
-  async function handleEnable() {
+  async function handleToggle() {
     setError(null);
+    if (status === "on") {
+      setStatus("disabling");
+      try {
+        await disablePush();
+        setStatus("off");
+      } catch {
+        setStatus("on");
+        setError(dictionary.alerts.couldNotDisable);
+      }
+      return;
+    }
+
     setStatus("enabling");
     try {
       await enablePush();
@@ -50,59 +61,37 @@ export function CriticalAlertsToggle() {
     }
   }
 
-  async function handleDisable() {
-    setError(null);
-    setStatus("disabling");
-    try {
-      await disablePush();
-      setStatus("off");
-    } catch {
-      setStatus("on");
-      setError(dictionary.alerts.couldNotDisable);
-    }
-  }
+  if (status === "unsupported") return null;
+
+  const isOn = status === "on";
+  const busy = status === "checking" || status === "enabling" || status === "disabling";
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border-2 border-border bg-white p-4">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <Bell className="h-5 w-5" aria-hidden="true" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <p className="text-lg font-semibold text-foreground">{dictionary.alerts.heading}</p>
-          <p className="text-base text-muted">{dictionary.alerts.blurb}</p>
-        </div>
-      </div>
-
-      {status === "unsupported" ? (
-        <p className="text-base text-muted">{dictionary.alerts.unsupportedMessage}</p>
-      ) : status === "on" ? (
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-base font-medium text-foreground">
-            {dictionary.alerts.enabledMessage}
-          </p>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleDisable}
-            disabled={status !== "on"}
-          >
-            <BellOff className="h-5 w-5" aria-hidden="true" />
-            {dictionary.alerts.disableButton}
-          </Button>
-        </div>
-      ) : (
-        <Button
+    <div className="flex flex-col items-end gap-1.5">
+      <div className="flex items-center gap-2.5">
+        <Bell className="h-5 w-5 text-primary" aria-hidden="true" />
+        <span className="text-base font-medium text-foreground">
+          {dictionary.alerts.heading}
+        </span>
+        <button
           type="button"
-          onClick={handleEnable}
-          disabled={status === "checking" || status === "enabling"}
+          role="switch"
+          aria-checked={isOn}
+          aria-label={dictionary.alerts.heading}
+          onClick={handleToggle}
+          disabled={busy}
+          className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+            isOn ? "bg-primary" : "bg-border"
+          }`}
         >
-          <Bell className="h-5 w-5" aria-hidden="true" />
-          {status === "enabling" ? dictionary.alerts.enabling : dictionary.alerts.enableButton}
-        </Button>
-      )}
-
-      {error && <p className="text-base font-medium text-danger-dark">{error}</p>}
+          <span
+            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
+              isOn ? "translate-x-6" : "translate-x-1"
+            }`}
+          />
+        </button>
+      </div>
+      {error && <p className="text-sm font-medium text-danger-dark">{error}</p>}
     </div>
   );
 }
