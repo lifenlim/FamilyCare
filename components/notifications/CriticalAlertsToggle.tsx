@@ -83,7 +83,7 @@ export function CriticalAlertsToggle() {
           disabled={busy}
           className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
             isOn ? "bg-primary" : "bg-border"
-          }`}
+          } ${busy ? "animate-pulse opacity-70" : ""}`}
         >
           <span
             className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
