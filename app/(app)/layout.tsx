@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { getCircleContext, listUserCircles } from "@/lib/supabase/queries";
+import { getCircleContextAndOptions } from "@/lib/supabase/queries";
 import { TopNav } from "@/components/TopNav";
 
 export default async function AppLayout({
@@ -12,8 +12,7 @@ export default async function AppLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const ctx = await getCircleContext(supabase);
-  const circles = await listUserCircles(supabase);
+  const { ctx, circles } = await getCircleContextAndOptions(supabase);
 
   return (
     <div className="min-h-screen bg-surface">

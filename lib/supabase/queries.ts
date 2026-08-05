@@ -18,27 +18,25 @@ import type {
 
 export const ACTIVE_CIRCLE_COOKIE = "active_circle_id";
 
-// Every circle a user can access -- the one they own (a user owns at most
-// one, enforced by a unique constraint) plus any they've been invited into
-// and accepted. Used to populate the circle switcher and to validate a
-// requested active-circle switch.
-export async function listUserCircles(
+// Every circle a user can access -- circles they own (any number, now that
+// one user can own several) plus any they've been invited into and
+// accepted. Used to populate the circle switcher and to validate a
+// requested active-circle switch. Takes the already-fetched user so callers
+// that need both this and the active context (e.g. the app layout) don't
+// pay for auth.getUser() twice.
+async function listUserCirclesForUser(
   supabase: SupabaseClient,
+  userId: string,
 ): Promise<UserCircleOption[]> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return [];
-
   const [{ data: owned }, { data: memberships }] = await Promise.all([
     supabase
       .from("care_circles")
       .select("id, name, patient_name")
-      .eq("owner_id", user.id),
+      .eq("owner_id", userId),
     supabase
       .from("care_circle_members")
       .select("circle_id, role, care_circles(name, patient_name)")
-      .eq("user_id", user.id),
+      .eq("user_id", userId),
   ]);
 
   const circles: UserCircleOption[] = (owned ?? []).map((c) => ({
@@ -64,24 +62,43 @@ export async function listUserCircles(
   return circles;
 }
 
-export async function getCircleContext(
+export async function listUserCircles(
   supabase: SupabaseClient,
-): Promise<CircleContext> {
+): Promise<UserCircleOption[]> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+  return listUserCirclesForUser(supabase, user.id);
+}
+
+function pickActiveCircle(
+  circles: UserCircleOption[],
+  activeId: string | undefined,
+): CircleContext {
+  const chosen =
+    circles.find((c) => c.circleId === activeId) ??
+    circles.find((c) => c.role === "owner") ??
+    circles[0];
+  return { circleId: chosen.circleId, circleName: chosen.circleName, role: chosen.role };
+}
+
+// Resolves both the active circle and the full switcher list from a single
+// fetch -- used by the app layout, which needs both on every navigation.
+export async function getCircleContextAndOptions(
+  supabase: SupabaseClient,
+): Promise<{ ctx: CircleContext; circles: UserCircleOption[] }> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  const circles = await listUserCircles(supabase);
+  const circles = await listUserCirclesForUser(supabase, user.id);
 
   if (circles.length > 0) {
     const cookieStore = await cookies();
     const activeId = cookieStore.get(ACTIVE_CIRCLE_COOKIE)?.value;
-    const chosen =
-      circles.find((c) => c.circleId === activeId) ??
-      circles.find((c) => c.role === "owner") ??
-      circles[0];
-    return { circleId: chosen.circleId, circleName: chosen.circleName, role: chosen.role };
+    return { ctx: pickActiveCircle(circles, activeId), circles };
   }
 
   const { data: created, error } = await supabase
@@ -91,7 +108,20 @@ export async function getCircleContext(
     throw new Error(error?.message ?? "Could not set up your care circle.");
   }
   const circle = created as { id: string; name: string };
-  return { circleId: circle.id, circleName: circle.name, role: "owner" };
+  const option: UserCircleOption = {
+    circleId: circle.id,
+    circleName: circle.name,
+    patientName: null,
+    role: "owner",
+  };
+  return { ctx: option, circles: [option] };
+}
+
+export async function getCircleContext(
+  supabase: SupabaseClient,
+): Promise<CircleContext> {
+  const { ctx } = await getCircleContextAndOptions(supabase);
+  return ctx;
 }
 
 export async function getCircleProfile(
