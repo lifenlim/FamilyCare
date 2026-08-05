@@ -239,6 +239,7 @@ const zh: Dictionary = {
     invalidTitle: "此邀请链接无效",
     invalidBody: "该链接可能已被使用、撤销或已过期，请让圈子拥有者重新发送一个新链接。",
     invitedTo: (circleName) => `您受邀加入 ${circleName}`,
+    invitedToPatient: (patientName) => `邀请您协助照顾${patientName}`,
     roleLabel: "角色：",
     signInToAccept: "使用您的邮箱登录以接受此邀请。",
     signInButton: "登录以接受邀请",

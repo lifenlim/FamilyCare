@@ -243,6 +243,7 @@ const en: Dictionary = {
     invalidBody:
       "It may have already been used, revoked, or expired. Ask the care circle owner to send a new link.",
     invitedTo: (circleName) => `You're invited to join ${circleName}`,
+    invitedToPatient: (patientName) => `You're invited to help care for ${patientName}`,
     roleLabel: "Role:",
     signInToAccept: "Sign in with your email to accept this invite.",
     signInButton: "Sign in to accept",

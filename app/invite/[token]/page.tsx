@@ -9,6 +9,7 @@ import type { Dictionary } from "@/lib/i18n/dictionary";
 interface InviteInfo {
   circle_id: string;
   circle_name: string;
+  patient_name: string | null;
   role: string;
   valid: boolean;
 }
@@ -50,7 +51,9 @@ export default async function InvitePage({
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-6 py-12 text-center">
       <h1 className="text-3xl font-bold">
-        {dictionary.invite.invitedTo(data.circle_name)}
+        {data.patient_name
+          ? dictionary.invite.invitedToPatient(data.patient_name)
+          : dictionary.invite.invitedTo(data.circle_name)}
       </h1>
       <Card>
         <p className="text-lg">

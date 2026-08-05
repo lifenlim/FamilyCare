@@ -247,6 +247,7 @@ const ms: Dictionary = {
     invalidBody:
       "Ia mungkin telah digunakan, ditarik balik, atau tamat tempoh. Minta pemilik bulatan penjagaan hantar pautan baharu.",
     invitedTo: (circleName) => `Anda dijemput untuk menyertai ${circleName}`,
+    invitedToPatient: (patientName) => `Anda dijemput untuk membantu menjaga ${patientName}`,
     roleLabel: "Peranan:",
     signInToAccept: "Log masuk dengan e-mel anda untuk menerima jemputan ini.",
     signInButton: "Log masuk untuk menerima",
