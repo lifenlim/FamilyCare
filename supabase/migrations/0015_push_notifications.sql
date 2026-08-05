@@ -48,7 +48,9 @@ create index if not exists idx_critical_alerts_sent_circle on public.critical_al
 alter table public.push_subscriptions enable row level security;
 alter table public.critical_alerts_sent enable row level security;
 
-grant select, insert, delete on public.push_subscriptions to authenticated;
+-- update is required too -- the client upserts on conflict (endpoint),
+-- which runs as an INSERT ... ON CONFLICT DO UPDATE under the hood.
+grant select, insert, update, delete on public.push_subscriptions to authenticated;
 grant select, delete on public.critical_alerts_sent to authenticated;
 
 -- push_subscriptions: a user manages only their own device registrations
