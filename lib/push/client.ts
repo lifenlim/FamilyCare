@@ -46,7 +46,10 @@ export async function enablePush(): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(subscription.toJSON()),
   });
-  if (!res.ok) throw new Error("save-failed");
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(`save-failed:${res.status}:${body?.error ?? "unknown"}`);
+  }
 }
 
 export async function disablePush(): Promise<void> {

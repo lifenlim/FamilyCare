@@ -53,10 +53,11 @@ export function CriticalAlertsToggle() {
       setStatus("on");
     } catch (err) {
       setStatus("off");
+      const detail = err instanceof Error ? err.message : String(err);
       setError(
-        err instanceof Error && err.message === "permission-denied"
+        detail === "permission-denied"
           ? dictionary.alerts.permissionDeniedMessage
-          : dictionary.alerts.couldNotEnable,
+          : `${dictionary.alerts.couldNotEnable} (${detail})`,
       );
     }
   }
