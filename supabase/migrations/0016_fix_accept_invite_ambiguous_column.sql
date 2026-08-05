@@ -5,6 +5,10 @@
 -- Nothing reads this function's return value, so just rename the output
 -- columns to stop the collision.
 
+-- CREATE OR REPLACE can't change a function's return signature, so the old
+-- circle_id/role-named version has to go first.
+drop function if exists public.accept_invite(uuid);
+
 create or replace function public.accept_invite(p_token uuid)
 returns table(out_circle_id uuid, out_role text)
 language plpgsql
