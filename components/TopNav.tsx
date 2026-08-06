@@ -89,21 +89,21 @@ export function TopNav({
             <CircleSwitcher circles={circles} activeCircleId={activeCircleId} />
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary whitespace-nowrap sm:text-xs">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold text-primary whitespace-nowrap sm:text-[10px]">
             {roleBadgeLabel[role]}
           </span>
           {(email || phone) && (
-            <span className="hidden truncate text-sm text-muted sm:inline sm:text-base">
+            <span className="hidden truncate text-xs text-muted sm:inline sm:text-sm">
               {email ?? phone}
             </span>
           )}
           <Button
             variant="secondary"
             onClick={handleSignOut}
-            className="min-h-0 shrink-0 px-2 py-1 text-xs sm:px-3 sm:text-sm"
+            className="min-h-0 shrink-0 px-1.5 py-0.5 text-[11px] sm:px-2 sm:text-xs"
           >
-            <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+            <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
           </Button>
         </div>
