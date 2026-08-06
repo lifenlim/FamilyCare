@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
 import { getLocale } from "@/lib/i18n/getDictionary";
 import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,7 +53,12 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <LocaleProvider initialLocale={locale}>
+          <div className="mx-auto w-full max-w-3xl px-3 pt-3 sm:px-4">
+            <InstallPrompt />
+          </div>
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

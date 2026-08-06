@@ -268,6 +268,12 @@ export interface Dictionary {
     thankYouBody: string;
     sendAnother: string;
   };
+  install: {
+    androidMessage: string;
+    installButton: string;
+    iosMessage: string;
+    dismiss: string;
+  };
   alerts: {
     heading: string;
     blurb: string;

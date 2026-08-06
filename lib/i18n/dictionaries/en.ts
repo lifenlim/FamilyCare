@@ -277,6 +277,13 @@ const en: Dictionary = {
     thankYouBody: "Your feedback has been sent. We appreciate you taking the time.",
     sendAnother: "Send another",
   },
+  install: {
+    androidMessage: "Install FamilyCare on your device for quick, one-tap access.",
+    installButton: "Install",
+    iosMessage:
+      'Add FamilyCare to your Home Screen: tap the Share icon, then "Add to Home Screen."',
+    dismiss: "Dismiss",
+  },
   alerts: {
     heading: "Critical alerts",
     blurb: "Get notified the moment a medication runs out, or on the morning of an appointment.",

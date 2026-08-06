@@ -273,6 +273,12 @@ const zh: Dictionary = {
     thankYouBody: "您的反馈已发送，感谢您抽出时间。",
     sendAnother: "再发送一条",
   },
+  install: {
+    androidMessage: "将 FamilyCare 安装到您的设备，一键快速打开。",
+    installButton: "安装",
+    iosMessage: "将 FamilyCare 添加到主屏幕：点击分享图标，然后选择“添加到主屏幕”。",
+    dismiss: "关闭",
+  },
   alerts: {
     heading: "重要提醒",
     blurb: "药物一旦用完，或预约当天早上，立即通知您。",

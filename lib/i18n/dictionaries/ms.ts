@@ -281,6 +281,13 @@ const ms: Dictionary = {
     thankYouBody: "Maklum balas anda telah dihantar. Kami menghargai masa anda.",
     sendAnother: "Hantar satu lagi",
   },
+  install: {
+    androidMessage: "Pasang FamilyCare pada peranti anda untuk akses pantas sekali ketik.",
+    installButton: "Pasang",
+    iosMessage:
+      "Tambah FamilyCare ke Skrin Utama anda: ketik ikon Kongsi, kemudian \"Tambah ke Skrin Utama.\"",
+    dismiss: "Ketepikan",
+  },
   alerts: {
     heading: "Makluman kritikal",
     blurb: "Terima makluman sebaik sahaja ubat kehabisan, atau pada pagi hari temujanji.",

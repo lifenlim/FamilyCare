@@ -22,6 +22,11 @@ self.addEventListener("push", (event) => {
   );
 });
 
+// No caching strategy -- this app needs a live connection regardless --
+// but a registered fetch handler is part of Chrome's install-eligibility
+// check, so this is here even though it just lets requests through as-is.
+self.addEventListener("fetch", () => {});
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const url = event.notification.data?.url || "/for-you";
