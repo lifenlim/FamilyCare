@@ -109,7 +109,12 @@ const ACCEPT_INVITE_ERRORS: Record<string, keyof Dictionary["invite"]["errors"]>
   "You already own this care circle": "alreadyOwn",
 };
 
-export async function acceptInvite(token: string): Promise<void> {
+// Returns a result object rather than throwing -- Next.js's handling of
+// errors thrown from a plain async Server Action call (as opposed to the
+// <form action>/useActionState pattern) redacted this to the generic
+// production error page instead of the translated message reaching
+// AcceptInviteButton's catch block.
+export async function acceptInvite(token: string): Promise<{ error?: string }> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .rpc("accept_invite", { p_token: token })
@@ -117,7 +122,7 @@ export async function acceptInvite(token: string): Promise<void> {
   if (error) {
     const dictionary = await getDictionary();
     const key = ACCEPT_INVITE_ERRORS[error.message];
-    throw new Error(key ? dictionary.invite.errors[key] : error.message);
+    return { error: key ? dictionary.invite.errors[key] : error.message };
   }
 
   // Joining a circle is a deliberate choice -- switch to it immediately
@@ -128,6 +133,7 @@ export async function acceptInvite(token: string): Promise<void> {
   }
 
   revalidatePath("/for-you");
+  return {};
 }
 
 export async function logView(action: string): Promise<void> {

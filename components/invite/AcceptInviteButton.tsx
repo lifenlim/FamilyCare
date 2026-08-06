@@ -16,14 +16,17 @@ export function AcceptInviteButton({ token }: { token: string }) {
   async function handleAccept() {
     setStatus("loading");
     try {
-      await acceptInvite(token);
+      const result = await acceptInvite(token);
+      if (result.error) {
+        setStatus("error");
+        setMessage(result.error);
+        return;
+      }
       router.push("/for-you");
       router.refresh();
-    } catch (err) {
+    } catch {
       setStatus("error");
-      setMessage(
-        err instanceof Error ? err.message : dictionary.invite.somethingWentWrong,
-      );
+      setMessage(dictionary.invite.somethingWentWrong);
     }
   }
 
