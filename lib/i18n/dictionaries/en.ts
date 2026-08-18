@@ -81,7 +81,7 @@ const en: Dictionary = {
     upcomingAppointment: "Upcoming appointment",
     nothingScheduled: "Nothing scheduled.",
     todaysMedications: "Today's medications",
-    activitiesAndTasks: "Activities & Tasks",
+    activitiesAndTasks: "Today's Activities",
     noMedicationsYet: "No medications added yet.",
     nothingScheduledToday: "Nothing scheduled for today.",
     lowStockTitle: (name) => `${name} is running low`,

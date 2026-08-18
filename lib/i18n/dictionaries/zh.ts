@@ -79,7 +79,7 @@ const zh: Dictionary = {
     upcomingAppointment: "即将到来的预约",
     nothingScheduled: "暂无安排。",
     todaysMedications: "今日用药",
-    activitiesAndTasks: "活动与任务",
+    activitiesAndTasks: "今日活动",
     noMedicationsYet: "尚未添加药物。",
     nothingScheduledToday: "今日暂无安排。",
     lowStockTitle: (name) => `${name}库存不足`,

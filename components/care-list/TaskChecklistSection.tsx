@@ -33,7 +33,7 @@ export function TaskChecklistSection({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col divide-y divide-border">
       {tasks.map((task) => {
         const done = optimistic[task.id] ?? doneMap.get(task.id) ?? false;
         return (

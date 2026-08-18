@@ -9,15 +9,6 @@ export const ACCENT_BADGE: Record<AccentTone, string> = {
   warn: "bg-warning-border/20 text-warning-text",
 };
 
-export const ACCENT_BORDER: Record<AccentTone, string> = {
-  primary: "border-primary",
-  blue: "border-accent-blue",
-  teal: "border-accent-teal",
-  gold: "border-accent-gold",
-  purple: "border-accent-purple",
-  warn: "border-warning-border",
-};
-
 export const ACCENT_SOLID: Record<AccentTone, string> = {
   primary: "bg-primary text-white",
   blue: "bg-accent-blue text-white",

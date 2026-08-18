@@ -85,7 +85,7 @@ const ms: Dictionary = {
     upcomingAppointment: "Temujanji akan datang",
     nothingScheduled: "Tiada apa-apa dijadualkan.",
     todaysMedications: "Ubat hari ini",
-    activitiesAndTasks: "Aktiviti & Tugasan",
+    activitiesAndTasks: "Aktiviti hari ini",
     noMedicationsYet: "Belum ada ubat ditambah.",
     nothingScheduledToday: "Tiada apa-apa dijadualkan untuk hari ini.",
     lowStockTitle: (name) => `${name} semakin kehabisan stok`,

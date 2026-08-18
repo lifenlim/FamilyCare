@@ -33,7 +33,7 @@ export function ChecklistSection({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col divide-y divide-border">
       {medications.map((med) => {
         const taken = optimistic[med.id] ?? takenMap.get(med.id) ?? false;
         return (
