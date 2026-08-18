@@ -1,5 +1,6 @@
 "use client";
 
+import type { WheelEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -63,6 +64,17 @@ export function TopNav({
     router.refresh();
   }
 
+  // The scrollbar is hidden for a cleaner look, which also removes the only
+  // drag handle mouse users (no touch, no trackpad) had to scroll it. This
+  // remaps normal vertical wheel scrolling to horizontal, but only when the
+  // bar is actually overflowing -- otherwise the page scrolls as normal.
+  function handleTabsWheel(e: WheelEvent<HTMLElement>) {
+    const el = e.currentTarget;
+    if (el.scrollWidth <= el.clientWidth) return;
+    el.scrollLeft += e.deltaY;
+    e.preventDefault();
+  }
+
   const tabs = TAB_CONFIG.filter(
     (tab) => !tab.roles || tab.roles.includes(role),
   );
@@ -109,7 +121,10 @@ export function TopNav({
           </button>
         </div>
       </div>
-      <nav className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3 sm:px-4">
+      <nav
+        className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3 sm:px-4"
+        onWheel={handleTabsWheel}
+      >
         {tabs.map((tab) => {
           const active = pathname.startsWith(tab.href);
           const Icon = tab.icon;

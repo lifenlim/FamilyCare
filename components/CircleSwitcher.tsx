@@ -40,7 +40,7 @@ export function CircleSwitcher({
         onChange={handleChange}
         disabled={pending}
         aria-label={dictionary.nav.switchCircle}
-        className="min-w-0 max-w-full truncate rounded-md border border-border bg-transparent py-0.5 text-sm text-muted focus-visible:border-primary sm:text-base"
+        className="w-fit min-w-0 max-w-[55vw] truncate rounded-md border border-border bg-transparent py-0.5 text-sm text-muted focus-visible:border-primary sm:max-w-[220px] sm:text-base"
       >
         {circles.map((c) => (
           <option key={c.circleId} value={c.circleId}>
