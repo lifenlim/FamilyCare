@@ -282,7 +282,7 @@ const en: Dictionary = {
     sendAnother: "Send another",
   },
   install: {
-    androidMessage: "Install FamilyCare on your device for quick, one-tap access.",
+    androidMessage: "Install FamilyCare for one-tap access.",
     installButton: "Install",
     iosMessage:
       'Add FamilyCare to your Home Screen: tap the Share icon, then "Add to Home Screen."',

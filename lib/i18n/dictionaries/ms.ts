@@ -286,7 +286,7 @@ const ms: Dictionary = {
     sendAnother: "Hantar satu lagi",
   },
   install: {
-    androidMessage: "Pasang FamilyCare pada peranti anda untuk akses pantas sekali ketik.",
+    androidMessage: "Pasang FamilyCare untuk akses sekali ketik.",
     installButton: "Pasang",
     iosMessage:
       "Tambah FamilyCare ke Skrin Utama anda: ketik ikon Kongsi, kemudian \"Tambah ke Skrin Utama.\"",
