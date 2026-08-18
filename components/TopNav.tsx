@@ -29,10 +29,10 @@ interface Tab {
 
 const TAB_CONFIG: Tab[] = [
   { href: "/for-you", labelKey: "today", icon: Home, roles: null },
-  { href: "/members", labelKey: "members", icon: Users, roles: null },
+  { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
   { href: "/medications", labelKey: "medications", icon: Pill, roles: null },
   { href: "/appointments", labelKey: "appointments", icon: CalendarDays, roles: null },
-  { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
+  { href: "/members", labelKey: "members", icon: Users, roles: null },
   { href: "/feedback", labelKey: "feedback", icon: MessageSquareHeart, roles: null },
 ];
 
