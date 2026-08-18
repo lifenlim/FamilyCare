@@ -113,7 +113,7 @@ export function TopNav({
           </Button>
         </div>
       </div>
-      <nav className="mx-auto flex max-w-3xl px-1 sm:gap-1 sm:px-4">
+      <nav className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3 sm:px-4">
         {tabs.map((tab) => {
           const active = pathname.startsWith(tab.href);
           const Icon = tab.icon;
@@ -121,14 +121,14 @@ export function TopNav({
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 border-b-4 px-1 py-2 text-xs font-semibold sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
+              className={`flex shrink-0 flex-col items-center justify-center gap-1 border-b-4 px-3 py-2 text-xs font-semibold whitespace-nowrap sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
                 active
                   ? "border-primary text-primary"
                   : "border-transparent text-muted hover:text-foreground"
               }`}
             >
               <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              <span className="truncate">{dictionary.nav[tab.labelKey]}</span>
+              <span>{dictionary.nav[tab.labelKey]}</span>
             </Link>
           );
         })}

@@ -86,3 +86,13 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Keeps the tab bar's horizontal scroll functional (touch/wheel/keyboard)
+   while hiding the scrollbar chrome for a cleaner look. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
