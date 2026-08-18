@@ -88,8 +88,9 @@ const ms: Dictionary = {
     activitiesAndTasks: "Aktiviti & Tugasan",
     noMedicationsYet: "Belum ada ubat ditambah.",
     nothingScheduledToday: "Tiada apa-apa dijadualkan untuk hari ini.",
-    lowStockMessage: (count, names) =>
-      `${count} ubat semakin kehabisan stok — ${names}. Masa untuk tambah stok!`,
+    lowStockTitle: (name) => `${name} semakin kehabisan stok`,
+    lowStockDetail: (days) =>
+      `Baki lebih kurang ${days} hari — masa untuk atur pengisian semula.`,
   },
   medications: {
     heading: "Ubat-ubatan",

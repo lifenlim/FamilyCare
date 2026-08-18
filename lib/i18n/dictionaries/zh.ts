@@ -82,8 +82,8 @@ const zh: Dictionary = {
     activitiesAndTasks: "活动与任务",
     noMedicationsYet: "尚未添加药物。",
     nothingScheduledToday: "今日暂无安排。",
-    lowStockMessage: (count, names) =>
-      `有 ${count} 种药物库存不足 —— ${names}。请及时补充！`,
+    lowStockTitle: (name) => `${name}库存不足`,
+    lowStockDetail: (days) => `大约还剩 ${days} 天 —— 请及时安排补充。`,
   },
   medications: {
     heading: "药物",

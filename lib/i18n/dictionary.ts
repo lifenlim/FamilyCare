@@ -80,7 +80,8 @@ export interface Dictionary {
     activitiesAndTasks: string;
     noMedicationsYet: string;
     nothingScheduledToday: string;
-    lowStockMessage: (count: number, names: string) => string;
+    lowStockTitle: (name: string) => string;
+    lowStockDetail: (days: number) => string;
   };
   medications: {
     heading: string;

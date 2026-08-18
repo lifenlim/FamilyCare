@@ -84,8 +84,9 @@ const en: Dictionary = {
     activitiesAndTasks: "Activities & Tasks",
     noMedicationsYet: "No medications added yet.",
     nothingScheduledToday: "Nothing scheduled for today.",
-    lowStockMessage: (count, names) =>
-      `${count} medication${count === 1 ? " is" : "s are"} running low — ${names}. Time to top up!`,
+    lowStockTitle: (name) => `${name} is running low`,
+    lowStockDetail: (days) =>
+      `About ${days} day${days === 1 ? "" : "s"} left — time to arrange a refill.`,
   },
   medications: {
     heading: "Medications",
