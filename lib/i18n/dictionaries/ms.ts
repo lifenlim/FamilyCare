@@ -32,6 +32,8 @@ const ms: Dictionary = {
     switchCircle: "Tukar orang yang anda jaga",
     addAnotherCircle: "+ Jaga orang lain",
     patientCareCircle: (name) => `Bulatan penjagaan ${name}`,
+    scrollTabsLeft: "Tatal tab ke kiri",
+    scrollTabsRight: "Tatal tab ke kanan",
     signedInAs: (identity) => `Log masuk sebagai ${identity}`,
   },
   loading: {

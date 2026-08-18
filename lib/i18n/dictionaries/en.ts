@@ -32,6 +32,8 @@ const en: Dictionary = {
     switchCircle: "Switch who you're caring for",
     addAnotherCircle: "+ Care for someone else",
     patientCareCircle: (name) => `${name}'s care circle`,
+    scrollTabsLeft: "Scroll tabs left",
+    scrollTabsRight: "Scroll tabs right",
     signedInAs: (identity) => `Signed in as ${identity}`,
   },
   loading: {

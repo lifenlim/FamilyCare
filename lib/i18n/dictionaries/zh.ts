@@ -32,6 +32,8 @@ const zh: Dictionary = {
     switchCircle: "切换正在照顾的对象",
     addAnotherCircle: "+ 照顾另一位",
     patientCareCircle: (name) => `${name}的关怀圈`,
+    scrollTabsLeft: "向左滚动标签",
+    scrollTabsRight: "向右滚动标签",
     signedInAs: (identity) => `以 ${identity} 身份登录`,
   },
   loading: {

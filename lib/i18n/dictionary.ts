@@ -30,6 +30,8 @@ export interface Dictionary {
     switchCircle: string;
     addAnotherCircle: string;
     patientCareCircle: (name: string) => string;
+    scrollTabsLeft: string;
+    scrollTabsRight: string;
     signedInAs: (identity: string) => string;
   };
   loading: {

@@ -1,10 +1,12 @@
 "use client";
 
-import type { WheelEvent } from "react";
+import { useEffect, useRef, useState, type WheelEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   Home,
   LogOut,
   MessageSquareHeart,
@@ -56,6 +58,9 @@ export function TopNav({
   const pathname = usePathname();
   const router = useRouter();
   const { dictionary } = useLocale();
+  const navRef = useRef<HTMLElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -73,6 +78,33 @@ export function TopNav({
     if (el.scrollWidth <= el.clientWidth) return;
     el.scrollLeft += e.deltaY;
     e.preventDefault();
+  }
+
+  // Belt-and-suspenders alongside wheel/touch scrolling: these arrows are
+  // always clickable, so the last tab is reachable no matter what gesture
+  // support the device/browser has.
+  function updateScrollButtons() {
+    const el = navRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }
+
+  useEffect(() => {
+    updateScrollButtons();
+    const el = navRef.current;
+    if (!el) return;
+    const onScroll = () => updateScrollButtons();
+    el.addEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [role]);
+
+  function scrollTabs(direction: -1 | 1) {
+    navRef.current?.scrollBy({ left: direction * 160, behavior: "smooth" });
   }
 
   const tabs = TAB_CONFIG.filter(
@@ -121,29 +153,52 @@ export function TopNav({
           </button>
         </div>
       </div>
-      <nav
-        className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3 sm:px-4"
-        onWheel={handleTabsWheel}
-      >
-        {tabs.map((tab) => {
-          const active = pathname.startsWith(tab.href);
-          const Icon = tab.icon;
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={`flex shrink-0 flex-col items-center justify-center gap-1 border-b-4 px-3 py-2 text-xs font-semibold whitespace-nowrap sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
-                active
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted hover:text-foreground"
-              }`}
-            >
-              <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              <span>{dictionary.nav[tab.labelKey]}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="relative mx-auto max-w-3xl">
+        {canScrollLeft && (
+          <button
+            type="button"
+            onClick={() => scrollTabs(-1)}
+            aria-label={dictionary.nav.scrollTabsLeft}
+            className="absolute top-0 left-0 z-10 flex h-full w-8 items-center justify-center bg-gradient-to-r from-white via-white/90 to-transparent text-primary"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+        <nav
+          ref={navRef}
+          className="no-scrollbar flex gap-1 overflow-x-auto px-3 sm:px-4"
+          onWheel={handleTabsWheel}
+        >
+          {tabs.map((tab) => {
+            const active = pathname.startsWith(tab.href);
+            const Icon = tab.icon;
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                className={`flex shrink-0 flex-col items-center justify-center gap-1 border-b-4 px-3 py-2 text-xs font-semibold whitespace-nowrap sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
+                  active
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted hover:text-foreground"
+                }`}
+              >
+                <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                <span>{dictionary.nav[tab.labelKey]}</span>
+              </Link>
+            );
+          })}
+        </nav>
+        {canScrollRight && (
+          <button
+            type="button"
+            onClick={() => scrollTabs(1)}
+            aria-label={dictionary.nav.scrollTabsRight}
+            className="absolute top-0 right-0 z-10 flex h-full w-8 items-center justify-center bg-gradient-to-l from-white via-white/90 to-transparent text-primary"
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+      </div>
     </header>
   );
 }
