@@ -1,4 +1,4 @@
-export type AccentTone = "primary" | "blue" | "teal" | "gold" | "purple" | "warn";
+export type AccentTone = "primary" | "blue" | "teal" | "gold" | "purple" | "warn" | "danger";
 
 export const ACCENT_BADGE: Record<AccentTone, string> = {
   primary: "bg-primary/15 text-primary",
@@ -7,6 +7,7 @@ export const ACCENT_BADGE: Record<AccentTone, string> = {
   gold: "bg-accent-gold/15 text-accent-gold",
   purple: "bg-accent-purple/15 text-accent-purple",
   warn: "bg-warning-border/20 text-warning-text",
+  danger: "bg-danger/15 text-danger-dark",
 };
 
 export const ACCENT_SOLID: Record<AccentTone, string> = {
@@ -16,4 +17,5 @@ export const ACCENT_SOLID: Record<AccentTone, string> = {
   gold: "bg-accent-gold text-white",
   purple: "bg-accent-purple text-white",
   warn: "bg-warning-border text-white",
+  danger: "bg-danger text-white",
 };
