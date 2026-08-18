@@ -31,6 +31,8 @@ const ms: Dictionary = {
     language: "Bahasa",
     switchCircle: "Tukar orang yang anda jaga",
     addAnotherCircle: "+ Jaga orang lain",
+    patientCareCircle: (name) => `Bulatan penjagaan ${name}`,
+    signedInAs: (identity) => `Log masuk sebagai ${identity}`,
   },
   loading: {
     text: "Memuatkan…",

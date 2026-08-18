@@ -33,18 +33,18 @@ export function CircleSwitcher({
   }
 
   return (
-    <label className="flex min-w-0 flex-1 flex-col">
+    <label className="flex min-w-0 max-w-full flex-col">
       <span className="sr-only">{dictionary.nav.switchCircle}</span>
       <select
         value={activeCircleId}
         onChange={handleChange}
         disabled={pending}
         aria-label={dictionary.nav.switchCircle}
-        className="min-w-0 max-w-full truncate rounded-lg border-2 border-border bg-white px-2 py-1 text-lg leading-tight font-bold focus-visible:border-primary sm:text-xl"
+        className="min-w-0 max-w-full truncate rounded-md border border-border bg-transparent py-0.5 text-sm text-muted focus-visible:border-primary sm:text-base"
       >
         {circles.map((c) => (
           <option key={c.circleId} value={c.circleId}>
-            {c.patientName || c.circleName}
+            {dictionary.nav.patientCareCircle(c.patientName || c.circleName)}
           </option>
         ))}
         <option value={CREATE_NEW}>{dictionary.nav.addAnotherCircle}</option>

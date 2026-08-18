@@ -29,6 +29,8 @@ export interface Dictionary {
     language: string;
     switchCircle: string;
     addAnotherCircle: string;
+    patientCareCircle: (name: string) => string;
+    signedInAs: (identity: string) => string;
   };
   loading: {
     text: string;

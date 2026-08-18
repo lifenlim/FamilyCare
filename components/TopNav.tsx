@@ -12,7 +12,6 @@ import {
   Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { CircleSwitcher } from "@/components/CircleSwitcher";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
@@ -20,9 +19,13 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { CircleRole, UserCircleOption } from "@/lib/types";
 
+type NavStringKey = {
+  [K in keyof Dictionary["nav"]]: Dictionary["nav"][K] extends string ? K : never;
+}[keyof Dictionary["nav"]];
+
 interface Tab {
   href: string;
-  labelKey: keyof Dictionary["nav"];
+  labelKey: NavStringKey;
   icon: typeof Home;
   roles: CircleRole[] | null;
 }
@@ -52,12 +55,6 @@ export function TopNav({
   const pathname = usePathname();
   const router = useRouter();
   const { dictionary } = useLocale();
-
-  const roleBadgeLabel: Record<CircleRole, string> = {
-    owner: dictionary.nav.roleOwner,
-    editor: dictionary.nav.roleCareTaker,
-    viewer: dictionary.nav.roleFamilyMember,
-  };
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -91,26 +88,25 @@ export function TopNav({
             />
           </span>
           <div className="min-w-0 flex-1">
+            <p className="truncate text-lg leading-tight font-bold sm:text-xl">FamilyCare</p>
             <CircleSwitcher circles={circles} activeCircleId={activeCircleId} />
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <span className="shrink-0 rounded-full border border-primary bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold text-primary whitespace-nowrap sm:text-[10px]">
-            {roleBadgeLabel[role]}
-          </span>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {(email || phone) && (
             <span className="hidden truncate text-xs text-muted sm:inline sm:text-sm">
-              {email ?? phone}
+              {dictionary.nav.signedInAs(email ?? phone ?? "")}
             </span>
           )}
-          <Button
-            variant="secondary"
+          <button
+            type="button"
             onClick={handleSignOut}
-            className="min-h-0 shrink-0 px-1.5 py-0.5 text-[11px] sm:px-2 sm:text-xs"
+            aria-label={dictionary.nav.signOut}
+            title={dictionary.nav.signOut}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-foreground sm:h-9 sm:w-9"
           >
-            <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">{dictionary.nav.signOut}</span>
-          </Button>
+            <LogOut className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+          </button>
         </div>
       </div>
       <nav className="no-scrollbar mx-auto flex max-w-3xl gap-1 overflow-x-auto px-3 sm:px-4">
