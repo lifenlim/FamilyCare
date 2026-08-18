@@ -1,6 +1,7 @@
-import { UserPlus, Users } from "lucide-react";
+import { History, UserPlus, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
+  getActivityLog,
   getCircleContext,
   getCircleOwner,
   getMembers,
@@ -9,15 +10,17 @@ import {
 import { Card } from "@/components/ui/Card";
 import { InviteGenerator } from "@/components/care-circle/InviteGenerator";
 import { MemberList } from "@/components/care-circle/MemberList";
+import { ActivityFeed } from "@/components/care-circle/ActivityFeed";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 
 export default async function MembersPage() {
   const supabase = await createClient();
   const ctx = await getCircleContext(supabase);
-  const [owner, members, invites, dictionary] = await Promise.all([
+  const [owner, members, invites, activity, dictionary] = await Promise.all([
     getCircleOwner(supabase, ctx.circleId),
     getMembers(supabase, ctx.circleId),
     getPendingInvites(supabase, ctx.circleId),
+    getActivityLog(supabase, ctx.circleId),
     getDictionary(),
   ]);
 
@@ -59,6 +62,23 @@ export default async function MembersPage() {
           invites={invites}
           isOwner={ctx.role === "owner"}
         />
+      </Card>
+
+      <Card>
+        <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+          <History className="h-5 w-5 text-primary sm:h-6 sm:w-6" aria-hidden="true" />
+          {dictionary.activity.activityLog}
+        </h2>
+        <p className="mt-1 text-base text-muted sm:text-lg">
+          {dictionary.activity.activityLogBlurb}
+        </p>
+        {ctx.role === "viewer" ? (
+          <p className="mt-4 text-base text-muted sm:text-lg">
+            {dictionary.activity.viewerNoAccess}
+          </p>
+        ) : (
+          <ActivityFeed entries={activity} />
+        )}
       </Card>
     </div>
   );

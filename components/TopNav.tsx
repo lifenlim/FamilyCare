@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  History,
+  CalendarDays,
   Home,
   LogOut,
   MessageSquareHeart,
+  Pill,
   UserCircle,
   Users,
 } from "lucide-react";
@@ -16,20 +17,24 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { CircleSwitcher } from "@/components/CircleSwitcher";
 import { BRAND_ICON_VERSION } from "@/lib/brand";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { CircleRole, UserCircleOption } from "@/lib/types";
 
-const TAB_CONFIG = [
-  { href: "/for-you", labelKey: "caringHub", icon: Home, roles: null },
-  { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
+interface Tab {
+  href: string;
+  labelKey: keyof Dictionary["nav"];
+  icon: typeof Home;
+  roles: CircleRole[] | null;
+}
+
+const TAB_CONFIG: Tab[] = [
+  { href: "/for-you", labelKey: "today", icon: Home, roles: null },
   { href: "/members", labelKey: "members", icon: Users, roles: null },
+  { href: "/medications", labelKey: "medications", icon: Pill, roles: null },
+  { href: "/appointments", labelKey: "appointments", icon: CalendarDays, roles: null },
+  { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
   { href: "/feedback", labelKey: "feedback", icon: MessageSquareHeart, roles: null },
-  {
-    href: "/activity",
-    labelKey: "activity",
-    icon: History,
-    roles: ["owner", "editor"] as CircleRole[],
-  },
-] as const;
+];
 
 export function TopNav({
   email,

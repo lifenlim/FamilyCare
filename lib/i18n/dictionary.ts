@@ -16,11 +16,12 @@ export interface Dictionary {
     viewerReadOnlyProfile: string;
   };
   nav: {
-    caringHub: string;
+    today: string;
     profile: string;
     members: string;
+    medications: string;
+    appointments: string;
     feedback: string;
-    activity: string;
     signOut: string;
     roleOwner: string;
     roleCareTaker: string;
@@ -206,8 +207,6 @@ export interface Dictionary {
     ownerOnlyInvite: string;
   };
   activity: {
-    heading: string;
-    subheading: string;
     activityLog: string;
     activityLogBlurb: string;
     viewerNoAccess: string;

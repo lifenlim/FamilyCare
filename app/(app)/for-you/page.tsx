@@ -9,8 +9,6 @@ import {
 } from "@/lib/supabase/queries";
 import { SummaryCard } from "@/components/care-list/SummaryCard";
 import { LowStockBanner } from "@/components/care-list/LowStockBanner";
-import { MedicationsSection } from "@/components/care-list/MedicationsSection";
-import { AppointmentsSection } from "@/components/care-list/AppointmentsSection";
 import { TasksSection } from "@/components/care-list/TasksSection";
 import { ViewLogger } from "@/components/care-list/ViewLogger";
 import { CriticalAlertsToggle } from "@/components/notifications/CriticalAlertsToggle";
@@ -69,9 +67,7 @@ export default async function ForYouPage() {
         checklist={checklist}
         taskChecklist={taskChecklist}
       />
-      <AppointmentsSection appointments={appointments} canEdit={canEdit} />
       <TasksSection tasks={tasks} canEdit={canEdit} />
-      <MedicationsSection medications={medications} canEdit={canEdit} />
     </div>
   );
 }

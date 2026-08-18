@@ -18,11 +18,12 @@ const en: Dictionary = {
     viewerReadOnlyProfile: "Family members can view the profile but not edit it.",
   },
   nav: {
-    caringHub: "Caring Hub",
+    today: "Today",
     profile: "Profile",
-    members: "Members",
+    members: "Care Circle",
+    medications: "Medications",
+    appointments: "Appointments",
     feedback: "Feedback",
-    activity: "Activity",
     signOut: "Sign out",
     roleOwner: "Owner",
     roleCareTaker: "Care Taker",
@@ -186,8 +187,8 @@ const en: Dictionary = {
     couldNotSave: "Could not save preferences.",
   },
   members: {
-    heading: "Members",
-    subheading: "Care Circle",
+    heading: "Care Circle",
+    subheading: "See who's involved and what's been happening.",
     inviteSomeone: "Invite someone",
     inviteBlurb:
       "Generate a link and share it with them. They'll sign in with their own email — no separate account setup needed.",
@@ -213,8 +214,6 @@ const en: Dictionary = {
     ownerOnlyInvite: "Only the account owner can invite people.",
   },
   activity: {
-    heading: "Activity",
-    subheading: "History",
     activityLog: "Activity log",
     activityLogBlurb: "Who viewed or edited care information recently.",
     viewerNoAccess: "Family members don't have access to the activity log.",

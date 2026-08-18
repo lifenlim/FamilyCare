@@ -18,11 +18,12 @@ const ms: Dictionary = {
     viewerReadOnlyProfile: "Ahli keluarga boleh melihat profil tetapi tidak boleh menyuntingnya.",
   },
   nav: {
-    caringHub: "Pusat Penjagaan",
+    today: "Hari Ini",
     profile: "Profil",
-    members: "Ahli",
+    members: "Bulatan Penjagaan",
+    medications: "Ubat-ubatan",
+    appointments: "Temujanji",
     feedback: "Maklum Balas",
-    activity: "Aktiviti",
     signOut: "Log keluar",
     roleOwner: "Pemilik",
     roleCareTaker: "Penjaga",
@@ -190,8 +191,8 @@ const ms: Dictionary = {
     couldNotSave: "Tidak dapat menyimpan keutamaan.",
   },
   members: {
-    heading: "Ahli",
-    subheading: "Bulatan Penjagaan",
+    heading: "Bulatan Penjagaan",
+    subheading: "Lihat siapa yang terlibat dan apa yang berlaku baru-baru ini.",
     inviteSomeone: "Jemput seseorang",
     inviteBlurb:
       "Jana pautan dan kongsikan dengan mereka. Mereka akan log masuk dengan e-mel sendiri — tiada persediaan akaun berasingan diperlukan.",
@@ -217,8 +218,6 @@ const ms: Dictionary = {
     ownerOnlyInvite: "Hanya pemilik akaun boleh menjemput orang lain.",
   },
   activity: {
-    heading: "Aktiviti",
-    subheading: "Sejarah",
     activityLog: "Log aktiviti",
     activityLogBlurb: "Siapa yang melihat atau menyunting maklumat penjagaan baru-baru ini.",
     viewerNoAccess: "Ahli keluarga tidak mempunyai akses kepada log aktiviti.",
