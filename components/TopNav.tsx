@@ -107,7 +107,7 @@ export function TopNav({
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {(email || phone) && (
             <span className="hidden truncate text-xs text-muted sm:inline sm:text-sm">
-              {dictionary.nav.signedInAs(email ?? phone ?? "")}
+              {dictionary.nav.signedInAs(email ? email.split("@")[0] : (phone as string))}
             </span>
           )}
           <button
