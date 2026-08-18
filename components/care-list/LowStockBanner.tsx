@@ -20,11 +20,11 @@ export function LowStockBanner({ medications }: { medications: Medication[] }) {
               aria-hidden="true"
             />
             <div>
-              <p className="text-base font-semibold text-danger-dark">
+              <p className="text-base font-semibold text-foreground">
                 {dictionary.forYou.lowStockTitle(med.name)}
               </p>
               {days !== null && (
-                <p className="text-sm text-danger-dark/80">
+                <p className="text-sm text-foreground/80">
                   {dictionary.forYou.lowStockDetail(Math.floor(days))}
                 </p>
               )}
