@@ -176,7 +176,7 @@ export function TopNav({
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`flex shrink-0 flex-col items-center justify-center gap-1 border-b-4 px-3 py-2 text-xs font-semibold whitespace-nowrap sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-lg ${
+                className={`flex shrink-0 flex-col items-center justify-center gap-1 border-b-4 px-3 py-2 text-xs font-semibold whitespace-nowrap sm:flex-row sm:gap-2 sm:px-4 sm:py-3 sm:text-base ${
                   active
                     ? "border-primary text-primary"
                     : "border-transparent text-muted hover:text-foreground"
