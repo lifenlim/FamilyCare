@@ -26,7 +26,9 @@ export function CheckToggle({
       >
         {checked && <Check className="h-5 w-5 text-white" />}
       </span>
-      {children}
+      <span className={checked ? "text-success line-through decoration-2" : undefined}>
+        {children}
+      </span>
     </label>
   );
 }
