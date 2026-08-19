@@ -217,6 +217,18 @@ const en: Dictionary = {
     copyLink: "Copy link",
     copied: "Copied!",
     ownerOnlyInvite: "Only the account owner can invite people.",
+    transferOwnership: "Make owner",
+    transferring: "Transferring...",
+    transferConfirm: (name) => `Make ${name} the owner of this care circle?`,
+    transferWarning:
+      "You'll become a Care Taker and lose owner-only controls like inviting people and removing members.",
+    couldNotTransfer: "Could not transfer ownership. Please try again.",
+    transferErrors: {
+      mustBeSignedIn: "Must be signed in to transfer ownership.",
+      alreadyOwner: "This person already owns the circle.",
+      notOwner: "Only the current owner can transfer ownership.",
+      notAMember: "That person is not a member of this circle.",
+    },
   },
   activity: {
     activityLog: "Activity log",
@@ -240,6 +252,7 @@ const en: Dictionary = {
       updatedTask: "updated a task",
       deletedTask: "removed a task",
       acceptedInvite: "joined the care circle",
+      transferredOwnership: "transferred ownership of the care circle",
     },
   },
   invite: {

@@ -98,6 +98,44 @@ export async function revokeMember(memberId: string): Promise<void> {
   revalidatePath("/members");
 }
 
+// transfer_ownership (0021_transfer_ownership.sql) raises these exact
+// messages -- translate the ones we know about and fall back to the raw
+// message for anything else.
+const TRANSFER_OWNERSHIP_ERRORS: Record<string, keyof Dictionary["members"]["transferErrors"]> = {
+  "Must be signed in": "mustBeSignedIn",
+  "You already own this circle": "alreadyOwner",
+  "You do not own this care circle": "notOwner",
+  "That person is not a member of this circle": "notAMember",
+};
+
+// Returns a result object rather than throwing, same reasoning as
+// acceptInvite -- keeps the translated message reaching the client intact.
+export async function transferOwnership(
+  newOwnerUserId: string,
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const [ctx, dictionary] = await Promise.all([
+    getCircleContext(supabase),
+    getDictionary(),
+  ]);
+  if (ctx.role !== "owner") {
+    return { error: dictionary.members.ownerOnlyInvite };
+  }
+
+  const { error } = await supabase.rpc("transfer_ownership", {
+    p_circle_id: ctx.circleId,
+    p_new_owner_id: newOwnerUserId,
+  });
+  if (error) {
+    const key = TRANSFER_OWNERSHIP_ERRORS[error.message];
+    return { error: key ? dictionary.members.transferErrors[key] : error.message };
+  }
+
+  revalidatePath("/members");
+  revalidatePath("/", "layout");
+  return {};
+}
+
 // accept_invite (0001_init.sql) raises these exact messages -- translate the
 // ones we know about and fall back to the raw message for anything else.
 const ACCEPT_INVITE_ERRORS: Record<string, keyof Dictionary["invite"]["errors"]> = {

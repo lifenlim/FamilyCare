@@ -221,6 +221,18 @@ const ms: Dictionary = {
     copyLink: "Salin pautan",
     copied: "Disalin!",
     ownerOnlyInvite: "Hanya pemilik akaun boleh menjemput orang lain.",
+    transferOwnership: "Jadikan pemilik",
+    transferring: "Memindahkan...",
+    transferConfirm: (name) => `Jadikan ${name} sebagai pemilik bulatan penjagaan ini?`,
+    transferWarning:
+      "Anda akan menjadi Penjaga dan kehilangan kawalan khas pemilik seperti menjemput orang dan membuang ahli.",
+    couldNotTransfer: "Tidak dapat memindahkan pemilikan. Sila cuba lagi.",
+    transferErrors: {
+      mustBeSignedIn: "Mesti log masuk untuk memindahkan pemilikan.",
+      alreadyOwner: "Orang ini sudah memiliki bulatan ini.",
+      notOwner: "Hanya pemilik semasa boleh memindahkan pemilikan.",
+      notAMember: "Orang itu bukan ahli bulatan ini.",
+    },
   },
   activity: {
     activityLog: "Log aktiviti",
@@ -244,6 +256,7 @@ const ms: Dictionary = {
       updatedTask: "mengemas kini tugasan",
       deletedTask: "membuang tugasan",
       acceptedInvite: "menyertai bulatan penjagaan",
+      transferredOwnership: "memindahkan pemilikan bulatan penjagaan",
     },
   },
   invite: {

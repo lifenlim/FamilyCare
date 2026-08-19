@@ -213,6 +213,17 @@ const zh: Dictionary = {
     copyLink: "复制链接",
     copied: "已复制！",
     ownerOnlyInvite: "只有账号拥有者可以邀请他人。",
+    transferOwnership: "设为拥有者",
+    transferring: "转让中...",
+    transferConfirm: (name) => `要将${name}设为此关怀圈的拥有者吗？`,
+    transferWarning: "您将变为照护者，并失去拥有者专属权限，例如邀请他人和移除成员。",
+    couldNotTransfer: "无法转让拥有权，请重试。",
+    transferErrors: {
+      mustBeSignedIn: "请先登录后再转让拥有权。",
+      alreadyOwner: "此人已是此关怀圈的拥有者。",
+      notOwner: "只有目前的拥有者可以转让拥有权。",
+      notAMember: "此人不是此关怀圈的成员。",
+    },
   },
   activity: {
     activityLog: "活动记录",
@@ -236,6 +247,7 @@ const zh: Dictionary = {
       updatedTask: "更新了一个任务",
       deletedTask: "删除了一个任务",
       acceptedInvite: "加入了这个关怀圈子",
+      transferredOwnership: "转让了关怀圈的拥有权",
     },
   },
   invite: {

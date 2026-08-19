@@ -210,6 +210,17 @@ export interface Dictionary {
     copyLink: string;
     copied: string;
     ownerOnlyInvite: string;
+    transferOwnership: string;
+    transferring: string;
+    transferConfirm: (name: string) => string;
+    transferWarning: string;
+    couldNotTransfer: string;
+    transferErrors: {
+      mustBeSignedIn: string;
+      alreadyOwner: string;
+      notOwner: string;
+      notAMember: string;
+    };
   };
   activity: {
     activityLog: string;
@@ -233,6 +244,7 @@ export interface Dictionary {
       updatedTask: string;
       deletedTask: string;
       acceptedInvite: string;
+      transferredOwnership: string;
     };
   };
   invite: {

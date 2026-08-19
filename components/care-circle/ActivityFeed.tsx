@@ -22,6 +22,7 @@ function actionLabel(dictionary: Dictionary, action: string): string {
     updated_task: dictionary.activity.actions.updatedTask,
     deleted_task: dictionary.activity.actions.deletedTask,
     accepted_invite: dictionary.activity.actions.acceptedInvite,
+    transferred_ownership: dictionary.activity.actions.transferredOwnership,
   };
   return map[action] ?? action;
 }
