@@ -306,7 +306,7 @@ const en: Dictionary = {
     dismiss: "Dismiss",
   },
   alerts: {
-    heading: "Critical alerts",
+    heading: "Enable Notifications",
     blurb: "Get notified the moment a medication runs out, or on the morning of an appointment.",
     enableButton: "Turn on critical alerts",
     enabling: "Turning on...",

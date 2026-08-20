@@ -299,7 +299,7 @@ const zh: Dictionary = {
     dismiss: "关闭",
   },
   alerts: {
-    heading: "重要提醒",
+    heading: "启用通知",
     blurb: "药物一旦用完，或预约当天早上，立即通知您。",
     enableButton: "开启重要提醒",
     enabling: "正在开启...",

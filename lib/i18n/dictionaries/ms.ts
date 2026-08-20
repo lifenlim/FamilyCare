@@ -310,7 +310,7 @@ const ms: Dictionary = {
     dismiss: "Ketepikan",
   },
   alerts: {
-    heading: "Makluman kritikal",
+    heading: "Aktifkan Pemberitahuan",
     blurb: "Terima makluman sebaik sahaja ubat kehabisan, atau pada pagi hari temujanji.",
     enableButton: "Hidupkan makluman kritikal",
     enabling: "Menghidupkan...",
