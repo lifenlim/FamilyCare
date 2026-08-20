@@ -281,11 +281,17 @@ export async function saveCareTask(formData: FormData): Promise<void> {
   }
 
   let recurrence: string | null = null;
+  let recurrenceDayOfWeek: number | null = null;
   let scheduledAt: string | null = null;
 
   if (scheduleType === "ongoing") {
     recurrence = ((formData.get("recurrence") as string) || "").trim();
     if (!recurrence) throw new Error(dictionary.tasks.recurrenceRequired);
+    if (recurrence === "weekly") {
+      const dayRaw = (formData.get("recurrence_day_of_week") as string) || "";
+      if (dayRaw === "") throw new Error(dictionary.tasks.dayOfWeekRequired);
+      recurrenceDayOfWeek = Number(dayRaw);
+    }
   } else {
     // TaskForm already converts the local datetime-local value to ISO
     // before calling this action, same as AppointmentForm does.
@@ -300,6 +306,7 @@ export async function saveCareTask(formData: FormData): Promise<void> {
     name,
     schedule_type: scheduleType,
     recurrence,
+    recurrence_day_of_week: recurrenceDayOfWeek,
     scheduled_at: scheduledAt,
     status,
     notes,

@@ -109,6 +109,7 @@ export interface CareTask {
   name: string;
   schedule_type: TaskScheduleType;
   recurrence: TaskRecurrence | null;
+  recurrence_day_of_week: number | null;
   scheduled_at: string | null;
   status: TaskStatus;
   notes: string | null;
@@ -127,13 +128,20 @@ function isToday(iso: string): boolean {
 }
 
 /**
- * Ongoing tasks have no anchor/start date to compute an exact "next due"
- * from, so any active ongoing task is treated as relevant every day. A
+ * Ongoing tasks other than weekly have no anchor/start date to compute an
+ * exact "next due" from, so any active ongoing task is treated as relevant
+ * every day. Weekly tasks are the exception -- they pin a specific day
+ * (recurrence_day_of_week), so they're only due when today matches it. A
  * one-time task only counts for today if its date is today.
  */
 export function isTaskDueToday(task: CareTask): boolean {
   if (task.status !== "active") return false;
-  if (task.schedule_type === "ongoing") return true;
+  if (task.schedule_type === "ongoing") {
+    if (task.recurrence === "weekly" && task.recurrence_day_of_week !== null) {
+      return new Date().getDay() === task.recurrence_day_of_week;
+    }
+    return true;
+  }
   return task.scheduled_at !== null && isToday(task.scheduled_at);
 }
 

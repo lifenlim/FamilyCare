@@ -6,7 +6,7 @@ import { saveCareTask } from "@/lib/actions/care-list";
 import { Button } from "@/components/ui/Button";
 import { Field, Select, TextArea, TextInput } from "@/components/ui/Field";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import type { CareTask, TaskScheduleType } from "@/lib/types";
+import type { CareTask, TaskRecurrence, TaskScheduleType } from "@/lib/types";
 
 function toLocalInputValue(iso?: string | null) {
   if (!iso) return "";
@@ -29,6 +29,9 @@ export function TaskForm({
   const [message, setMessage] = useState("");
   const [scheduleType, setScheduleType] = useState<TaskScheduleType>(
     task?.schedule_type ?? "ongoing",
+  );
+  const [recurrence, setRecurrence] = useState<TaskRecurrence | "">(
+    task?.recurrence ?? "",
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -75,23 +78,45 @@ export function TaskForm({
         </Select>
       </Field>
       {scheduleType === "ongoing" ? (
-        <Field label={dictionary.tasks.whenLabel} htmlFor="task-recurrence">
-          <Select
-            id="task-recurrence"
-            name="recurrence"
-            required
-            defaultValue={task?.recurrence ?? ""}
-          >
-            <option value="" disabled>
-              {dictionary.tasks.selectFrequency}
-            </option>
-            {Object.entries(dictionary.enums.recurrence).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
+        <>
+          <Field label={dictionary.tasks.whenLabel} htmlFor="task-recurrence">
+            <Select
+              id="task-recurrence"
+              name="recurrence"
+              required
+              value={recurrence}
+              onChange={(e) => setRecurrence(e.target.value as TaskRecurrence)}
+            >
+              <option value="" disabled>
+                {dictionary.tasks.selectFrequency}
               </option>
-            ))}
-          </Select>
-        </Field>
+              {Object.entries(dictionary.enums.recurrence).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </Field>
+          {recurrence === "weekly" && (
+            <Field label={dictionary.tasks.dayOfWeekLabel} htmlFor="task-day-of-week">
+              <Select
+                id="task-day-of-week"
+                name="recurrence_day_of_week"
+                required
+                defaultValue={task?.recurrence_day_of_week?.toString() ?? ""}
+              >
+                <option value="" disabled>
+                  {dictionary.tasks.selectDay}
+                </option>
+                {Object.entries(dictionary.enums.dayOfWeek).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
+        </>
       ) : (
         <Field label={dictionary.tasks.whenLabel} htmlFor="task-scheduled-at">
           <TextInput

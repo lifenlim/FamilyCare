@@ -149,6 +149,10 @@ const en: Dictionary = {
     scheduleTypeRequired: "Please choose Recurring or One Time.",
     recurrenceRequired: "Please choose how often this repeats.",
     dateTimeRequired: "Please choose the date and time.",
+    dayOfWeekLabel: "Which day",
+    selectDay: "Select a day",
+    dayOfWeekRequired: "Please choose which day of the week.",
+    weeklyOnDay: (day) => `Weekly on ${day}`,
   },
   allergies: {
     heading: "Allergies",
@@ -316,6 +320,15 @@ const en: Dictionary = {
     couldNotDisable: "Could not turn off alerts. Please try again.",
   },
   enums: {
+    dayOfWeek: {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+    },
     gender: {
       male: "Male",
       female: "Female",

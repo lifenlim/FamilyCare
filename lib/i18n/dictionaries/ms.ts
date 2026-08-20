@@ -153,6 +153,10 @@ const ms: Dictionary = {
     scheduleTypeRequired: "Sila pilih Berulang atau Sekali Sahaja.",
     recurrenceRequired: "Sila pilih berapa kerap ia berulang.",
     dateTimeRequired: "Sila pilih tarikh dan masa.",
+    dayOfWeekLabel: "Hari yang mana",
+    selectDay: "Pilih satu hari",
+    dayOfWeekRequired: "Sila pilih hari dalam minggu.",
+    weeklyOnDay: (day) => `Setiap minggu pada hari ${day}`,
   },
   allergies: {
     heading: "Alahan",
@@ -320,6 +324,15 @@ const ms: Dictionary = {
     couldNotDisable: "Tidak dapat mematikan makluman. Sila cuba lagi.",
   },
   enums: {
+    dayOfWeek: {
+      "0": "Ahad",
+      "1": "Isnin",
+      "2": "Selasa",
+      "3": "Rabu",
+      "4": "Khamis",
+      "5": "Jumaat",
+      "6": "Sabtu",
+    },
     gender: {
       male: "Lelaki",
       female: "Perempuan",

@@ -24,6 +24,13 @@ function formatWhen(iso: string, localeTag: string) {
 
 function scheduleSummary(dictionary: Dictionary, localeTag: string, task: CareTask) {
   if (task.schedule_type === "ongoing" && task.recurrence) {
+    if (task.recurrence === "weekly" && task.recurrence_day_of_week !== null) {
+      return dictionary.tasks.weeklyOnDay(
+        dictionary.enums.dayOfWeek[
+          String(task.recurrence_day_of_week) as keyof typeof dictionary.enums.dayOfWeek
+        ],
+      );
+    }
     return dictionary.enums.recurrence[task.recurrence];
   }
   if (task.schedule_type === "one_time" && task.scheduled_at) {

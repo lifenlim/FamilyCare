@@ -143,6 +143,10 @@ export interface Dictionary {
     scheduleTypeRequired: string;
     recurrenceRequired: string;
     dateTimeRequired: string;
+    dayOfWeekLabel: string;
+    selectDay: string;
+    dayOfWeekRequired: string;
+    weeklyOnDay: (day: string) => string;
   };
   allergies: {
     heading: string;
@@ -304,6 +308,15 @@ export interface Dictionary {
     couldNotDisable: string;
   };
   enums: {
+    dayOfWeek: {
+      "0": string;
+      "1": string;
+      "2": string;
+      "3": string;
+      "4": string;
+      "5": string;
+      "6": string;
+    };
     gender: {
       male: string;
       female: string;

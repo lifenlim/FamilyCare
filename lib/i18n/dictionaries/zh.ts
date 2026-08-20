@@ -146,6 +146,10 @@ const zh: Dictionary = {
     scheduleTypeRequired: "请选择定期或单次。",
     recurrenceRequired: "请选择重复频率。",
     dateTimeRequired: "请选择日期与时间。",
+    dayOfWeekLabel: "星期几",
+    selectDay: "选择一天",
+    dayOfWeekRequired: "请选择星期几。",
+    weeklyOnDay: (day) => `每${day}`,
   },
   allergies: {
     heading: "过敏信息",
@@ -308,6 +312,15 @@ const zh: Dictionary = {
     couldNotDisable: "无法关闭提醒，请重试。",
   },
   enums: {
+    dayOfWeek: {
+      "0": "星期日",
+      "1": "星期一",
+      "2": "星期二",
+      "3": "星期三",
+      "4": "星期四",
+      "5": "星期五",
+      "6": "星期六",
+    },
     gender: {
       male: "男",
       female: "女",
