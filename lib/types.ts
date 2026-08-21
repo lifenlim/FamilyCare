@@ -45,6 +45,7 @@ export function calculateAge(dateOfBirth: string): number {
 
 export type MedicationFrequency =
   | "once_daily"
+  | "alternate_day"
   | "twice_daily"
   | "thrice_daily"
   | "as_needed";
@@ -53,6 +54,7 @@ export type MedicationFrequency =
 // daysOfSupply/isRunningLow treat a missing entry as "can't compute, skip".
 export const FREQUENCY_PER_DAY: Partial<Record<MedicationFrequency, number>> = {
   once_daily: 1,
+  alternate_day: 0.5,
   twice_daily: 2,
   thrice_daily: 3,
 };

@@ -341,6 +341,7 @@ const ms: Dictionary = {
     },
     frequency: {
       once_daily: "Sekali sehari",
+      alternate_day: "Setiap dua hari",
       twice_daily: "Dua kali sehari",
       thrice_daily: "Tiga kali sehari",
       as_needed: "Hanya bila diperlukan",

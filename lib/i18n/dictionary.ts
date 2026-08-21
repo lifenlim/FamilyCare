@@ -325,6 +325,7 @@ export interface Dictionary {
     };
     frequency: {
       once_daily: string;
+      alternate_day: string;
       twice_daily: string;
       thrice_daily: string;
       as_needed: string;

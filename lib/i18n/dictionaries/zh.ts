@@ -329,6 +329,7 @@ const zh: Dictionary = {
     },
     frequency: {
       once_daily: "每日一次",
+      alternate_day: "隔日一次",
       twice_daily: "每日两次",
       thrice_daily: "每日三次",
       as_needed: "按需服用",

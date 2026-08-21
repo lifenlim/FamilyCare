@@ -337,6 +337,7 @@ const en: Dictionary = {
     },
     frequency: {
       once_daily: "Once a day",
+      alternate_day: "Alternate day",
       twice_daily: "Twice a day",
       thrice_daily: "Three times a day",
       as_needed: "Only when required",
