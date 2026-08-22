@@ -11,7 +11,6 @@ function actionLabel(dictionary: Dictionary, action: string): string {
     created_medication: dictionary.activity.actions.createdMedication,
     updated_medication: dictionary.activity.actions.updatedMedication,
     topped_up_medication: dictionary.activity.actions.toppedUpMedication,
-    updated_medication_balance: dictionary.activity.actions.updatedMedicationBalance,
     deleted_medication: dictionary.activity.actions.deletedMedication,
     created_appointment: dictionary.activity.actions.createdAppointment,
     updated_appointment: dictionary.activity.actions.updatedAppointment,

@@ -74,19 +74,24 @@ export function MedicationForm({
           ))}
         </Select>
       </Field>
-      {!medication && (
-        <Field label={dictionary.medications.currentBalanceLabel} htmlFor="med-balance">
-          <TextInput
-            id="med-balance"
-            name="initial_balance"
-            type="number"
-            min={0}
-            step="any"
-            required
-            defaultValue={0}
-          />
-        </Field>
-      )}
+      <Field
+        label={
+          medication
+            ? dictionary.medications.newBalanceLabel
+            : dictionary.medications.currentBalanceLabel
+        }
+        htmlFor="med-balance"
+      >
+        <TextInput
+          id="med-balance"
+          name="balance"
+          type="number"
+          min={0}
+          step="any"
+          required
+          defaultValue={medication ? Math.round(medication.current_balance) : 0}
+        />
+      </Field>
       <Field label={dictionary.common.notesLabel} htmlFor="med-notes">
         <TextArea
           id="med-notes"

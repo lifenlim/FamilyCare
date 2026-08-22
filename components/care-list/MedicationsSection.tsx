@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Hash, Pencil, Pill, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { AlertTriangle, Pencil, Pill, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { MedicationForm } from "./MedicationForm";
 import { TopUpForm } from "./TopUpForm";
-import { UpdateBalanceForm } from "./UpdateBalanceForm";
 import { deleteMedication } from "@/lib/actions/care-list";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { daysOfSupply, isRunningLow, type Medication } from "@/lib/types";
@@ -27,7 +26,6 @@ export function MedicationsSection({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingNew, setAddingNew] = useState(false);
   const [toppingUpId, setToppingUpId] = useState<string | null>(null);
-  const [updatingBalanceId, setUpdatingBalanceId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState("");
@@ -80,7 +78,6 @@ export function MedicationsSection({
           const days = daysOfSupply(med);
           const isEditing = editingId === med.id;
           const isToppingUp = toppingUpId === med.id;
-          const isUpdatingBalance = updatingBalanceId === med.id;
 
           if (isEditing) {
             return (
@@ -157,16 +154,6 @@ export function MedicationsSection({
                     {dictionary.medications.topUp}
                   </Button>
                   <Button
-                    variant="secondary"
-                    className="min-h-0 px-4 py-2 text-base"
-                    onClick={() =>
-                      setUpdatingBalanceId(isUpdatingBalance ? null : med.id)
-                    }
-                  >
-                    <Hash className="h-5 w-5" aria-hidden="true" />
-                    {dictionary.medications.updateBalance}
-                  </Button>
-                  <Button
                     variant="danger"
                     className="min-h-0 px-4 py-2 text-base"
                     onClick={() => {
@@ -185,15 +172,6 @@ export function MedicationsSection({
                   medicationId={med.id}
                   medicationName={med.name}
                   onDone={() => setToppingUpId(null)}
-                />
-              )}
-
-              {isUpdatingBalance && (
-                <UpdateBalanceForm
-                  medicationId={med.id}
-                  medicationName={med.name}
-                  currentBalance={med.current_balance}
-                  onDone={() => setUpdatingBalanceId(null)}
                 />
               )}
 

@@ -64,19 +64,33 @@ export async function saveMedication(formData: FormData): Promise<void> {
   if (!frequency) throw new Error(dictionary.medications.frequencyRequired);
   const notes = ((formData.get("notes") as string) || "").trim() || null;
 
+  const balanceRaw = (formData.get("balance") as string) ?? "";
+  if (balanceRaw.trim() === "") throw new Error(dictionary.medications.balanceRequired);
+  const balance = Number(balanceRaw);
+  if (!Number.isFinite(balance) || balance < 0) {
+    throw new Error(dictionary.medications.updateBalanceInvalid);
+  }
+
   if (id) {
+    // Changing the balance here resets the depletion anchor the same way
+    // Top Up does -- harmless if the field was left untouched (resetting
+    // last_refill_at to now() with the same balance value doesn't change
+    // anything observable), and correctly re-arms the countdown when it
+    // was actually edited.
     const { error } = await supabase
       .from("medications")
-      .update({ name, dose_amount, frequency, notes })
+      .update({
+        name,
+        dose_amount,
+        frequency,
+        notes,
+        last_refill_balance: Math.round(balance),
+        last_refill_at: new Date().toISOString(),
+      })
       .eq("id", id);
     if (error) throw error;
     await logEdit(supabase, ctx.circleId, userId, "updated_medication", "medications", id, name);
   } else {
-    const initialBalanceRaw = (formData.get("initial_balance") as string) ?? "";
-    if (initialBalanceRaw.trim() === "") {
-      throw new Error(dictionary.medications.balanceRequired);
-    }
-    const initialBalance = Number(initialBalanceRaw);
     const { data, error } = await supabase
       .from("medications")
       .insert({
@@ -85,7 +99,7 @@ export async function saveMedication(formData: FormData): Promise<void> {
         dose_amount,
         frequency,
         notes,
-        last_refill_balance: initialBalance,
+        last_refill_balance: Math.round(balance),
         last_refill_at: new Date().toISOString(),
       })
       .select("id")
@@ -164,44 +178,6 @@ export async function topUpMedication(
     ctx.circleId,
     userId,
     "topped_up_medication",
-    "medications",
-    medicationId,
-    medicationName,
-  );
-  revalidateCareList();
-}
-
-// Sets the balance to an exact value, unlike topUpMedication which only
-// adds -- for correcting drift after a physical recount, since there's
-// otherwise no way to reduce or directly set the balance once a
-// medication has been created.
-export async function updateMedicationBalance(
-  medicationId: string,
-  newBalance: number,
-  medicationName: string,
-): Promise<void> {
-  const { supabase, ctx, dictionary, userId } = await requireEditor();
-  if (!Number.isFinite(newBalance) || newBalance < 0) {
-    throw new Error(dictionary.medications.updateBalanceInvalid);
-  }
-
-  const { error } = await supabase
-    .from("medications")
-    .update({
-      last_refill_balance: Math.round(newBalance),
-      last_refill_at: new Date().toISOString(),
-    })
-    .eq("id", medicationId);
-  if (error) throw error;
-
-  // A trigger clears the medication_zero dedup record on this update --
-  // see supabase/migrations/0018_auto_clear_critical_alerts.sql.
-
-  await logEdit(
-    supabase,
-    ctx.circleId,
-    userId,
-    "updated_medication_balance",
     "medications",
     medicationId,
     medicationName,
