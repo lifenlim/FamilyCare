@@ -143,7 +143,10 @@ export async function topUpMedication(
     .single();
   if (fetchErr) throw fetchErr;
 
-  const newBalance = Number(med.current_balance ?? 0) + amount;
+  // Round rather than carry forward whatever fractional remainder
+  // current_balance happens to have -- last_refill_balance tracks a
+  // physical count of units, which should stay a whole number.
+  const newBalance = Math.round(Number(med.current_balance ?? 0) + amount);
   const { error } = await supabase
     .from("medications")
     .update({
