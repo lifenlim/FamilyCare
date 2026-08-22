@@ -110,6 +110,10 @@ export interface Dictionary {
     frequencyRequired: string;
     balanceRequired: string;
     topUpAmountInvalid: string;
+    updateBalance: string;
+    newBalanceLabel: string;
+    couldNotUpdateBalance: string;
+    updateBalanceInvalid: string;
   };
   appointments: {
     heading: string;
@@ -237,6 +241,7 @@ export interface Dictionary {
       createdMedication: string;
       updatedMedication: string;
       toppedUpMedication: string;
+      updatedMedicationBalance: string;
       deletedMedication: string;
       createdAppointment: string;
       updatedAppointment: string;

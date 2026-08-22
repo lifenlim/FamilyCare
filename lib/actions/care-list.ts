@@ -171,6 +171,44 @@ export async function topUpMedication(
   revalidateCareList();
 }
 
+// Sets the balance to an exact value, unlike topUpMedication which only
+// adds -- for correcting drift after a physical recount, since there's
+// otherwise no way to reduce or directly set the balance once a
+// medication has been created.
+export async function updateMedicationBalance(
+  medicationId: string,
+  newBalance: number,
+  medicationName: string,
+): Promise<void> {
+  const { supabase, ctx, dictionary, userId } = await requireEditor();
+  if (!Number.isFinite(newBalance) || newBalance < 0) {
+    throw new Error(dictionary.medications.updateBalanceInvalid);
+  }
+
+  const { error } = await supabase
+    .from("medications")
+    .update({
+      last_refill_balance: Math.round(newBalance),
+      last_refill_at: new Date().toISOString(),
+    })
+    .eq("id", medicationId);
+  if (error) throw error;
+
+  // A trigger clears the medication_zero dedup record on this update --
+  // see supabase/migrations/0018_auto_clear_critical_alerts.sql.
+
+  await logEdit(
+    supabase,
+    ctx.circleId,
+    userId,
+    "updated_medication_balance",
+    "medications",
+    medicationId,
+    medicationName,
+  );
+  revalidateCareList();
+}
+
 export async function saveAppointment(formData: FormData): Promise<void> {
   const { supabase, ctx, dictionary, userId } = await requireEditor();
   const id = (formData.get("id") as string) || null;

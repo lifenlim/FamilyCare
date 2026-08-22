@@ -120,6 +120,10 @@ const ms: Dictionary = {
     frequencyRequired: "Sila pilih berapa kerap ubat ini diambil.",
     balanceRequired: "Baki ubat semasa diperlukan.",
     topUpAmountInvalid: "Masukkan amaun tambah stok lebih daripada sifar.",
+    updateBalance: "Kemaskini baki",
+    newBalanceLabel: "Baki baharu",
+    couldNotUpdateBalance: "Tidak dapat mengemaskini baki. Sila cuba lagi.",
+    updateBalanceInvalid: "Masukkan baki 0 atau lebih.",
   },
   appointments: {
     heading: "Temujanji",
@@ -249,6 +253,7 @@ const ms: Dictionary = {
       createdMedication: "menambah ubat",
       updatedMedication: "mengemas kini ubat",
       toppedUpMedication: "menambah stok ubat",
+      updatedMedicationBalance: "mengemaskini baki ubat",
       deletedMedication: "membuang ubat",
       createdAppointment: "menambah temujanji",
       updatedAppointment: "mengemas kini temujanji",
