@@ -120,7 +120,7 @@ const ms: Dictionary = {
     frequencyRequired: "Sila pilih berapa kerap ubat ini diambil.",
     balanceRequired: "Baki ubat semasa diperlukan.",
     topUpAmountInvalid: "Masukkan amaun tambah stok lebih daripada sifar.",
-    newBalanceLabel: "Baki baharu",
+    newBalanceLabel: "Baki Ubat Sedia Ada",
     updateBalanceInvalid: "Masukkan baki 0 atau lebih.",
   },
   appointments: {

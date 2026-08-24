@@ -113,7 +113,7 @@ const zh: Dictionary = {
     frequencyRequired: "请选择服用频率。",
     balanceRequired: "请填写当前药物库存。",
     topUpAmountInvalid: "请输入大于零的补充数量。",
-    newBalanceLabel: "新的库存数量",
+    newBalanceLabel: "现有药物库存",
     updateBalanceInvalid: "请输入 0 或以上的库存数量。",
   },
   appointments: {

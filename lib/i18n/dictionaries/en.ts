@@ -116,7 +116,7 @@ const en: Dictionary = {
     frequencyRequired: "Please choose how often it's taken.",
     balanceRequired: "Current medication balance is required.",
     topUpAmountInvalid: "Enter a top-up amount greater than zero.",
-    newBalanceLabel: "New balance",
+    newBalanceLabel: "Existing Medicine Balance",
     updateBalanceInvalid: "Enter a balance of 0 or more.",
   },
   appointments: {
