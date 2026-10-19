@@ -94,7 +94,7 @@ export function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={dictionary.login.emailPlaceholder}
-            className="pl-12"
+            className="pl-12 sm:pl-12"
           />
         </div>
       </Field>

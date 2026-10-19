@@ -89,7 +89,7 @@ export function PhoneLoginForm() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder={dictionary.login.codePlaceholder}
-              className="pl-12"
+              className="pl-12 sm:pl-12"
             />
           </div>
         </Field>
