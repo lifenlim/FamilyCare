@@ -29,6 +29,19 @@ function formatTime(time: string, localeTag: string) {
   }).format(new Date(`2000-01-01T${time}Z`));
 }
 
+// People who picked the exact same start and end on a day share one row.
+// Input is already ordered by start time, so groups come out in time order.
+function groupVisitsBySlot(visits: Visit[]): Visit[][] {
+  const groups = new Map<string, Visit[]>();
+  for (const v of visits) {
+    const key = `${v.start_time}-${v.end_time}`;
+    const group = groups.get(key);
+    if (group) group.push(v);
+    else groups.set(key, [v]);
+  }
+  return [...groups.values()];
+}
+
 type FormState = { mode: "add"; date: string } | { mode: "edit"; visit: Visit } | null;
 
 export function VisitsWeek({
@@ -159,106 +172,121 @@ export function VisitsWeek({
                 <p className="text-base text-muted">{dictionary.visits.noVisitsPlanned}</p>
               )}
 
-              {dayVisits.map((visit) => {
-                if (form?.mode === "edit" && form.visit.id === visit.id) {
-                  return (
-                    <div
-                      key={visit.id}
-                      className="rounded-lg border-2 border-primary bg-white p-3 sm:p-4"
-                    >
-                      <VisitForm
-                        visit={visit}
-                        defaultDate={date}
-                        onDone={() => setForm(null)}
-                      />
-                    </div>
-                  );
-                }
-                const canChange = canManageAll || visit.user_id === currentUserId;
-                const when = `${formatTime(visit.start_time, tag)} – ${formatTime(
-                  visit.end_time,
-                  tag,
-                )}`;
+              {groupVisitsBySlot(dayVisits).map((group) => {
+                const { start_time, end_time } = group[0];
+                const shared = group.length > 1;
+                const when = `${formatTime(start_time, tag)} – ${formatTime(end_time, tag)}`;
+                const dateLabel = formatDate(date, tag, {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                });
+                const editing =
+                  form?.mode === "edit" ? group.find((v) => v.id === form.visit.id) : undefined;
+                const changeable = group.filter(
+                  (v) => canManageAll || v.user_id === currentUserId,
+                );
                 return (
-                  <div
-                    key={visit.id}
-                    className="flex flex-col gap-3 rounded-lg border-2 border-border bg-white p-3"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-lg font-semibold">{when}</p>
-                        <p className="text-lg">
-                          <span
-                            className={
-                              visit.user_id === currentUserId ? "font-semibold text-primary" : ""
-                            }
-                          >
-                            {visitorName(visit)}
+                  <div key={`${start_time}-${end_time}`} className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-2 rounded-lg border-2 border-border bg-white p-3">
+                      <p className="text-lg font-semibold">{when}</p>
+                      <p className="text-lg">
+                        {group.map((visit, i) => (
+                          <span key={visit.id}>
+                            {i > 0 && ", "}
+                            <span
+                              className={
+                                visit.user_id === currentUserId ? "font-semibold text-primary" : ""
+                              }
+                            >
+                              {visitorName(visit)}
+                            </span>
                           </span>
-                        </p>
-                        {visit.note && (
-                          <p className="text-base break-words text-muted">{visit.note}</p>
-                        )}
-                      </div>
-                      {canChange && (
-                        <div className="flex gap-2">
-                          <Button
-                            variant="secondary"
-                            className="min-h-0 px-3 py-1.5 text-base"
-                            onClick={() => setForm({ mode: "edit", visit })}
-                          >
-                            <Pencil className="h-5 w-5" aria-hidden="true" />
-                            {dictionary.common.edit}
-                          </Button>
-                          <Button
-                            variant="danger"
-                            className="min-h-0 px-3 py-1.5 text-base"
-                            aria-label={dictionary.common.remove}
-                            title={dictionary.common.remove}
-                            onClick={() => {
-                              setDeleteError("");
-                              setRemovingId(visit.id);
-                            }}
-                          >
-                            <Trash2 className="h-5 w-5" aria-hidden="true" />
-                          </Button>
+                        ))}
+                      </p>
+                      {group
+                        .filter((v) => v.note)
+                        .map((visit) => (
+                          <p key={visit.id} className="text-base break-words text-muted">
+                            {shared ? `${visitorName(visit)}: ${visit.note}` : visit.note}
+                          </p>
+                        ))}
+
+                      {changeable.map((visit) => (
+                        <div key={visit.id} className="flex flex-col gap-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            {shared && (
+                              <span className="text-base font-medium">{visitorName(visit)}</span>
+                            )}
+                            <div className="flex gap-2">
+                              <Button
+                                variant="secondary"
+                                className="min-h-0 px-3 py-1.5 text-base"
+                                onClick={() => setForm({ mode: "edit", visit })}
+                              >
+                                <Pencil className="h-5 w-5" aria-hidden="true" />
+                                {dictionary.common.edit}
+                              </Button>
+                              <Button
+                                variant="danger"
+                                className="min-h-0 px-3 py-1.5 text-base"
+                                aria-label={dictionary.common.remove}
+                                title={dictionary.common.remove}
+                                onClick={() => {
+                                  setDeleteError("");
+                                  setRemovingId(visit.id);
+                                }}
+                              >
+                                <Trash2 className="h-5 w-5" aria-hidden="true" />
+                              </Button>
+                            </div>
+                          </div>
+
+                          {removingId === visit.id && (
+                            <div className="flex flex-col gap-3 rounded-lg border-2 border-danger bg-white p-3">
+                              <p className="text-lg font-medium">
+                                {dictionary.visits.removeConfirm(`${dateLabel}, ${when}`)}
+                              </p>
+                              {deleteError && (
+                                <p role="alert" className="text-lg text-danger">
+                                  {deleteError}
+                                </p>
+                              )}
+                              <div className="flex flex-wrap gap-3">
+                                <Button
+                                  variant="danger"
+                                  className="min-h-0 px-4 py-2 text-base"
+                                  disabled={deletingId === visit.id}
+                                  onClick={() => handleConfirmRemove(visit.id)}
+                                >
+                                  <Trash2 className="h-5 w-5" aria-hidden="true" />
+                                  {deletingId === visit.id
+                                    ? dictionary.common.removing
+                                    : dictionary.common.yesRemove}
+                                </Button>
+                                <Button
+                                  variant="secondary"
+                                  className="min-h-0 px-4 py-2 text-base"
+                                  disabled={deletingId === visit.id}
+                                  onClick={() => setRemovingId(null)}
+                                >
+                                  {dictionary.common.cancel}
+                                </Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
 
-                    {removingId === visit.id && (
-                      <div className="flex flex-col gap-3 rounded-lg border-2 border-danger bg-white p-3">
-                        <p className="text-lg font-medium">
-                          {dictionary.visits.removeConfirm(
-                            `${formatDate(date, tag, { weekday: "short", day: "numeric", month: "short" })}, ${when}`,
-                          )}
-                        </p>
-                        {deleteError && (
-                          <p role="alert" className="text-lg text-danger">
-                            {deleteError}
-                          </p>
-                        )}
-                        <div className="flex flex-wrap gap-3">
-                          <Button
-                            variant="danger"
-                            className="min-h-0 px-4 py-2 text-base"
-                            disabled={deletingId === visit.id}
-                            onClick={() => handleConfirmRemove(visit.id)}
-                          >
-                            <Trash2 className="h-5 w-5" aria-hidden="true" />
-                            {deletingId === visit.id
-                              ? dictionary.common.removing
-                              : dictionary.common.yesRemove}
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            className="min-h-0 px-4 py-2 text-base"
-                            disabled={deletingId === visit.id}
-                            onClick={() => setRemovingId(null)}
-                          >
-                            {dictionary.common.cancel}
-                          </Button>
-                        </div>
+                    {editing && (
+                      <div className="rounded-lg border-2 border-primary bg-white p-3 sm:p-4">
+                        <VisitForm
+                          key={editing.id}
+                          visit={editing}
+                          defaultDate={date}
+                          onDone={() => setForm(null)}
+                        />
                       </div>
                     )}
                   </div>
