@@ -13,10 +13,13 @@ async function notifyFeedbackSubmitted(params: {
   submitterEmail: string | null;
 }) {
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return;
+  if (!apiKey) {
+    console.warn("RESEND_API_KEY is not set; skipping feedback notification email");
+    return;
+  }
 
   try {
-    await fetch("https://api.resend.com/emails", {
+    const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -34,6 +37,13 @@ async function notifyFeedbackSubmitted(params: {
         ].join("\n"),
       }),
     });
+    if (!res.ok) {
+      console.error(
+        "Resend rejected feedback notification email",
+        res.status,
+        await res.text(),
+      );
+    }
   } catch (err) {
     // Feedback is already saved -- a failed notification shouldn't fail the submission.
     console.error("Failed to send feedback notification email", err);
