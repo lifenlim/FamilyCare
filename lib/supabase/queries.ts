@@ -13,6 +13,7 @@ import type {
   Medication,
   TaskChecklistEntry,
   UserCircleOption,
+  Visit,
 } from "@/lib/types";
 
 export const ACTIVE_CIRCLE_COOKIE = "active_circle_id";
@@ -135,6 +136,35 @@ export async function getAppointments(
     .order("appointment_at");
   if (error) throw error;
   return (data ?? []) as Appointment[];
+}
+
+export async function getVisits(
+  supabase: SupabaseClient,
+  circleId: string,
+  fromDate: string,
+  toDate: string,
+): Promise<Visit[]> {
+  const { data, error } = await supabase
+    .from("visits")
+    .select("*, profiles(email, phone)")
+    .eq("circle_id", circleId)
+    .gte("visit_date", fromDate)
+    .lte("visit_date", toDate)
+    .order("visit_date")
+    .order("start_time");
+  if (error) throw error;
+  return (data ?? []).map((v) => {
+    const profile = (
+      v as unknown as {
+        profiles: { email: string | null; phone: string | null } | null;
+      }
+    ).profiles;
+    return {
+      ...v,
+      email: profile?.email ?? null,
+      phone: profile?.phone ?? null,
+    };
+  }) as Visit[];
 }
 
 export async function getAllergies(

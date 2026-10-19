@@ -7,6 +7,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  HeartHandshake,
   Home,
   LogOut,
   MessageSquareHeart,
@@ -38,6 +39,7 @@ const TAB_CONFIG: Tab[] = [
   { href: "/profile", labelKey: "profile", icon: UserCircle, roles: null },
   { href: "/medications", labelKey: "medications", icon: Pill, roles: null },
   { href: "/appointments", labelKey: "appointments", icon: CalendarDays, roles: null },
+  { href: "/visits", labelKey: "visits", icon: HeartHandshake, roles: null },
   { href: "/members", labelKey: "members", icon: Users, roles: null },
   { href: "/feedback", labelKey: "feedback", icon: MessageSquareHeart, roles: null },
 ];

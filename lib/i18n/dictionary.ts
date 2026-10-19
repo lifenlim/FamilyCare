@@ -21,6 +21,7 @@ export interface Dictionary {
     members: string;
     medications: string;
     appointments: string;
+    visits: string;
     feedback: string;
     signOut: string;
     roleOwner: string;
@@ -125,6 +126,29 @@ export interface Dictionary {
     couldNotSave: string;
     titleRequired: string;
     dateTimeRequired: string;
+  };
+  visits: {
+    heading: string;
+    intro: string;
+    addVisit: string;
+    previousWeek: string;
+    nextWeek: string;
+    thisWeek: string;
+    noVisitsPlanned: string;
+    you: string;
+    someone: string;
+    dateLabel: string;
+    startLabel: string;
+    endLabel: string;
+    noteLabel: string;
+    notePlaceholder: string;
+    couldNotSave: string;
+    couldNotRemove: string;
+    removeConfirm: (when: string) => string;
+    dateRequired: string;
+    timeRequired: string;
+    endAfterStart: string;
+    notAllowed: string;
   };
   tasks: {
     heading: string;

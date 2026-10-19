@@ -219,3 +219,17 @@ export function isRunningLow(med: Medication): boolean {
 }
 
 export type FeedbackCategory = "bug" | "idea" | "compliment" | "other";
+
+// A planned visit to the patient. visit_date is "YYYY-MM-DD" and the times are
+// "HH:MM:SS" wall-clock values (no timezone) straight from Postgres.
+export interface Visit {
+  id: string;
+  circle_id: string;
+  user_id: string;
+  visit_date: string;
+  start_time: string;
+  end_time: string;
+  note: string | null;
+  email: string | null;
+  phone: string | null;
+}
